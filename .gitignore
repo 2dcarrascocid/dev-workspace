@@ -1,0 +1,25 @@
+# SO / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# entornos y dependencias (por si en el futuro agregás scripts propios)
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.local
+
+# evidencia y logs que puedan generarse al probar el toolkit acá mismo
+# (la evidencia real vive en el .claude/evidence/ de cada PROYECTO consumidor,
+# no en este repo)
+.claude/evidence/
+.gemini/evidence/
+*.log
+
+# nota: agents/dist/ NO se ignora a propósito — se commitea generado,
+# así los proyectos consumidores no necesitan correr build.sh para
+# levantar la última versión al hacer `git submodule update --remote`.

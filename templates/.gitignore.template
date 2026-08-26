@@ -1,0 +1,25 @@
+# --- Repos independientes (cada uno es su propio git, con su propio remoto) ---
+# Este repo padre solo orquesta agentes/skills — nunca debe trackear el código
+# de estos proyectos ni intentar subirlos como si fueran suyos.
+#
+# project_bootstrap completa esta sección automáticamente detectando qué
+# subcarpetas de primer nivel tienen su propio .git. Si agregás un repo hijo
+# nuevo más adelante, pedile a tu agente que actualice el .gitignore, o
+# agregalo vos a mano con una línea `nombre-carpeta/`.
+{{CHILD_REPOS}}
+
+# --- SO / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# --- evidencia generada por los agentes (queda local, no se versiona) ---
+.claude/evidence/
+.gemini/evidence/
+
+# --- entornos / secretos ---
+.env
+.env.local
+node_modules/
