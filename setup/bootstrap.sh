@@ -53,6 +53,8 @@ fi
 
 bash tools/dev-toolkit/setup/link.sh
 
+bash tools/dev-toolkit/setup/check-global-tools.sh
+
 if [ ! -f PROJECT.md ]; then
   cp tools/dev-toolkit/templates/PROJECT.md.template PROJECT.md
   ln -sf PROJECT.md CLAUDE.md

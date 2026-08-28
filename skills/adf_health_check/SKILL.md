@@ -32,6 +32,9 @@ lectura.
 6. **Secretos**: si aparece algún archivo `ejm.env`/`.env.example`/similar en
    el proyecto, invocar la skill `secrets_scanner` sobre él como parte del
    reporte, en vez de solo mencionar que existe.
+7. **Herramientas globales**: correr `tools/dev-toolkit/setup/check-global-tools.sh`
+   y reportar qué herramientas de `skills/CATALOG.md` (Tipo B — graphify,
+   ui-ux-pro-max, etc.) faltan instalar en esta máquina.
 
 ## Formato de reporte
 

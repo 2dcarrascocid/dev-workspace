@@ -15,5 +15,7 @@ cd - > /dev/null
 
 bash tools/dev-toolkit/setup/link.sh
 
+bash tools/dev-toolkit/setup/check-global-tools.sh
+
 echo ""
 echo "✅ dev-toolkit actualizado."
