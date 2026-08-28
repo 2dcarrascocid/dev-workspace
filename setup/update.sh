@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Actualiza el dev-toolkit dentro de un proyecto que lo tiene clonado
-# (no-submodule) en tools/dev-toolkit. Correr desde la raíz del proyecto.
+# (no-submodule) en tools/dev-toolkit, y re-sincroniza todo con link.sh.
+# Correr desde la raíz del proyecto.
 
 set -e
 
@@ -14,8 +15,3 @@ git pull origin main
 cd - > /dev/null
 
 bash tools/dev-toolkit/setup/link.sh
-
-bash tools/dev-toolkit/setup/check-global-tools.sh
-
-echo ""
-echo "✅ dev-toolkit actualizado."

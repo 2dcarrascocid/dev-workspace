@@ -35,6 +35,9 @@ lectura.
 7. **Herramientas globales**: correr `tools/dev-toolkit/setup/check-global-tools.sh`
    y reportar qué herramientas de `skills/CATALOG.md` (Tipo B — graphify,
    ui-ux-pro-max, etc.) faltan instalar en esta máquina.
+8. **Versión del toolkit**: reportar `git -C tools/dev-toolkit rev-parse --short HEAD`
+   y la fecha del último commit, para que el usuario sepa si está desactualizado
+   sin tener que revisarlo a mano.
 
 ## Formato de reporte
 

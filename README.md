@@ -72,6 +72,31 @@ portabilidad entre máquinas, por ejemplo), nada te lo impide — `git init` ah�
 cuando quieras, agregando `tools/dev-toolkit/` a tu propio `.gitignore` (ya
 que ese sí tiene su remoto propio, no hace falta anidarlo).
 
+## Troubleshooting
+
+**Symlinks fallan en Windows (`base` queda como carpeta vacía, no como link)**
+→ Falta activar el Modo Desarrollador: Configuración → Privacidad y seguridad
+→ Para desarrolladores → activar. Cerrar y reabrir la terminal, volver a
+correr `link.sh`. Desde esta versión, `link.sh` se auto-verifica y te avisa
+si esto pasó — no hace falta que lo detectes vos con `ls -la`.
+
+**`claude`/`gemini`/`codex` da "command not found" después de instalarlo**
+→ Cada CLI (y cada terminal — WSL, Git Bash, PowerShell son entornos
+distintos con su propio PATH) necesita su propia instalación. Instalar un
+CLI en PowerShell no lo hace disponible en WSL, y viceversa. Confirmá con
+`which <comando>` en la terminal específica que estás usando.
+
+**No sé si tengo la última versión del toolkit en este proyecto**
+→ Correr `link.sh` (o `update.sh`) siempre imprime al final la versión
+instalada (hash corto + fecha del commit). Compará con el último commit del
+repo en GitHub si tenés dudas.
+
+**Submodule/clone quedó anidado (`tools/dev-toolkit/dev-toolkit/`)**
+→ Pasa cuando `git submodule add`/`git clone` se corre estando parado
+*adentro* de `tools/` o `tools/dev-toolkit/` en vez de la raíz del proyecto.
+Confirmá con `pwd` antes de agregar el toolkit. `bootstrap.sh` ya incluye una
+guarda que aborta si detecta esta situación.
+
 ## Uso en un proyecto nuevo (recomendado — un solo comando)
 
 Guardá `bootstrap.sh` en un lugar fijo de tu máquina (no depende de estar
