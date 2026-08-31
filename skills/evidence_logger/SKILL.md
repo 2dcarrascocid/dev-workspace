@@ -1,30 +1,44 @@
----
-name: evidence_logger
-description: Registra evidencia y trazabilidad de cada tarea agentic (plan, outputs por capa, resultado de validación). Úsalo al final de cualquier tarea coordinada por agent_orchestrator.
----
+# Addendum a skills/evidence_logger/ — Certificación liviana
 
-# Evidence Logger
-
-Registrás, para cada `task_id`, un rastro auditable de qué se decidió, qué
-capa hizo qué, y qué validación se aplicó.
-
-## Estructura a generar
+No reemplaza el registro de plan+resultado que ya hace evidence_logger — lo
+complementa. Cuando el Validator aprueba una tarea, evidence_logger debería además
+escribir un registro corto y estructurado (no prosa) en:
 
 ```
-.claude/evidence/<task-id>/
-├── plan.md              # decisión del orchestrator: capas, orden, objetivo
-├── db.md                 # output de db-architect, si aplicó
-├── backend.md             # output de backend-dev, si aplicó
-├── frontend.md            # output de frontend-dev, si aplicó
-├── security-review.md    # output de security-reviewer
-└── qa-report.md          # output de qa-tester
+.adf/certifications/<ruta-normalizada>.yaml
 ```
 
-Cada archivo debe incluir: timestamp, agente que lo generó, status, y el
-output estructurado que ese agente devolvió (ver formato en cada agente).
+Ejemplo, para la migración de api-rendicion/servicios:
 
-## Reglas
-- Nunca sobrescribas evidencia de tareas anteriores — cada `task_id` tiene su
-  propia carpeta.
-- Si una tarea queda "blocked" o "needs_review", eso debe quedar explícito en
-  `plan.md` para que sea auditable después.
+```yaml
+path: routes/api/api-rendicion/servicios
+tags: [backend, error-handling, service-unification]
+standard_applied: standards/error-handling-backend.md
+validated_by: security-reviewer
+date: 2026-08-31
+agent: claude
+files_touched:
+  - route-servicio.js
+  - core-servicios.js
+tests_passed: true
+commit: null   # queda null si "nothing committed yet"
+notes: >
+  Wrapper route-servicio.js no estaba wireado con los middlewares — corregido.
+  Ver docs/manejo-errores-servicios.md para detalle completo.
+```
+
+## Para qué sirve esto en la práctica
+Antes de que un agente (cualquier CLI) empiece a tocar una ruta, puede chequear
+`.adf/certifications/` para esa ruta:
+- Si ya existe un registro con el mismo `standard_applied` y `tests_passed: true`,
+  no repite el trabajo desde cero — parte del estado ya certificado.
+- Si el registro es viejo o el standard cambió desde entonces, lo sabe por
+  comparación de fecha/versión del standard, en vez de asumir.
+- Si dos sesiones en paralelo (como pasó con Claude en servicios) tocan rutas
+  hermanas, esto es lo que le permite a la segunda sesión saber qué ya se hizo sin
+  tener que leer commits a mano.
+
+## Alcance de esta v1
+No hace falta un schema validator ni un dashboard — un YAML por ruta, generado por
+evidence_logger al cierre de cada tarea validada, alcanza. Si en el futuro esto
+crece mucho, ahí se evalúa una herramienta dedicada (no antes).
