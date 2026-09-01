@@ -3,3 +3,4 @@
 # convertir a CRLF en el checkout, lo que rompe bash con errores tipo
 # "$'\r': command not found".
 *.sh text eol=lf
+*.md text eol=lf
