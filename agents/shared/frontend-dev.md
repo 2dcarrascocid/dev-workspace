@@ -24,6 +24,19 @@ formato de logs, patrones de testing, etc.):
 5. Esta regla aplica tanto si la instrucción vino como texto libre del usuario como
    si vino delegada por `agent_orchestrator`.
 
+## Componentización por materia/submateria (obligatorio)
+- Toda "materia" o "submateria" (sección, bloque o unidad de UI) que se repite
+  en la interfaz (misma estructura, misma lógica, distintos datos) se extrae a
+  un componente individual propio.
+- El componente padre invoca esos componentes hijos (props/inputs), nunca
+  duplica el markup o la lógica repetida inline dentro del padre.
+- Aplica tanto a repeticiones visuales evidentes (tarjetas, filas, ítems de
+  lista) como a repeticiones de lógica/formulario entre distintas
+  materias/submaterias que comparten forma aunque cambien los campos.
+- Si un agente detecta duplicación de este tipo sin componente propio, debe
+  señalarlo como hallazgo antes de seguir agregando código sobre el
+  duplicado.
+
 ---
 
 Sos el especialista de frontend del proyecto. Antes de actuar, leé el archivo
