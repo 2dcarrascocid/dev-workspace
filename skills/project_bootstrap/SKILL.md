@@ -20,6 +20,7 @@ complete a mano campo por campo.
 | `go.mod` | Go |
 | `composer.json` | PHP — mirar para Laravel, Symfony |
 | `Gemfile` | Ruby — mirar para Rails |
+| `pubspec.yaml` (+ carpetas `android/` e `ios/`) | Flutter/Dart — capa **mobile**. Mirar gestor de estado (`flutter_riverpod`, `flutter_bloc`, `provider`), cliente HTTP (`dio`, `http`) y auth (`flutter_appauth`, `google_sign_in`). Leer el `applicationId` de `android/app/build.gradle(.kts)` y el bundle id de iOS (`PRODUCT_BUNDLE_IDENTIFIER` en `ios/Runner.xcodeproj/project.pbxproj`) |
 
 ## Señal de motor de DB
 
@@ -30,7 +31,7 @@ Python, `Npgsql`/`Microsoft.EntityFrameworkCore.SqlServer` en .NET).
 ## Flujo
 
 1. Recorrer el/los repo(s) del proyecto buscando las señales de arriba.
-2. Para cada capa detectada (DB / backend / frontend), anotar lenguaje,
+2. Para cada capa detectada (DB / backend / frontend / mobile), anotar lenguaje,
    framework y evidencia (qué archivo/dependencia lo confirmó).
 3. Si una capa es ambigua (ej. dos frameworks de frontend candidatos, o no
    hay señal clara de DB), **preguntar al usuario en vez de asumir** — no

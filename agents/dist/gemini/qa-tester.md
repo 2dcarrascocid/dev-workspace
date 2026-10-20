@@ -47,6 +47,14 @@ el objetivo original de la tarea, sin escribir código de producción.
 - No corregir el código vos mismo — reportá el fallo al orchestrator.
 - No aprobar una tarea sin evidencia de que los tests relevantes pasan.
 
+## Si la tarea es `layer: mobile`
+- Correr `flutter analyze`, `flutter test` e `integration_test` en un
+  emulador o simulador.
+- Reportar el resultado separado por plataforma; lo que no se probó se marca
+  `not_run` con su motivo (ej. "iOS: sin Mac ni CI macOS").
+- Casos borde a cubrir: sin conexión, token expirado, permiso denegado, app
+  en segundo plano y restaurada, rotación, pantalla chica y fuente grande.
+
 ## Checklist antes de reportar
 - [ ] Tests relevantes corridos
 - [ ] Casos borde considerados
@@ -58,5 +66,6 @@ task_id: <id>
 layer: testing
 status: approved | failed | needs_review
 test_results: "..."
+platforms: {android: passed|failed|not_run, ios: passed|failed|not_run}  # solo si layer: mobile
 notes: "..."
 ```

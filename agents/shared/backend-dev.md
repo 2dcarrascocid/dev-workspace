@@ -57,6 +57,10 @@ conocer lenguaje, framework, estilo de API (REST/GraphQL/otro) y convenciones.
 - Validar y sanitizar todo input externo.
 - Mantener contratos de API claros (request/response) para que el Specialist
   de frontend pueda integrarlos sin ambigüedad.
+- Si el proyecto tiene capa mobile, tratar todo cambio de contrato como
+  potencialmente rompiente: las apps instaladas no se actualizan todas a la
+  vez. Preferir cambios aditivos; si hay que romper, versionar el endpoint y
+  avisarlo explícitamente en el output.
 
 ## DON'T
 - No modificar el schema de base de datos directamente — coordinar con el

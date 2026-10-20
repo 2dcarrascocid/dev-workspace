@@ -12,8 +12,8 @@ lectura.
 ## Checklist a correr
 
 1. **Agentes**: listar `.claude/agents/base/` (o `.gemini/agents/*.md`) y
-   confirmar que están los 5 roles: db-architect, backend-dev, frontend-dev,
-   security-reviewer, qa-tester. Si el proyecto tiene `agents/local/`,
+   confirmar que están los 6 roles: db-architect, backend-dev, frontend-dev,
+   mobile-dev, security-reviewer, qa-tester. Si el proyecto tiene `agents/local/`,
    listarlos también y aclarar que son específicos de este proyecto.
 2. **Skills**: listar `.claude/skills/base/` (o `.gemini/skills/base/`) y
    confirmar que están `agent_orchestrator`, `evidence_logger`,
@@ -35,7 +35,11 @@ lectura.
 7. **Herramientas globales**: correr `tools/dev-toolkit/setup/check-global-tools.sh`
    y reportar qué herramientas de `skills/CATALOG.md` (Tipo B — graphify,
    ui-ux-pro-max, etc.) faltan instalar en esta máquina.
-8. **Versión del toolkit**: reportar `git -C tools/dev-toolkit rev-parse --short HEAD`
+8. **Toolchain móvil** (solo si `PROJECT.md` tiene capa Mobile o existe un
+   `pubspec.yaml`): correr `flutter doctor -v` y reportar Flutter, Android
+   toolchain y — solo en macOS — Xcode y CocoaPods. En Windows/Linux reportar
+   iOS como ⚠️ "requiere Mac o CI macOS": no es una falla del setup.
+9. **Versión del toolkit**: reportar `git -C tools/dev-toolkit rev-parse --short HEAD`
    y la fecha del último commit, para que el usuario sepa si está desactualizado
    sin tener que revisarlo a mano.
 

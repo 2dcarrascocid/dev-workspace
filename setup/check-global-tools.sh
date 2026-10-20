@@ -50,3 +50,49 @@ echo ""
 echo "Si falta alguna y la usás seguido, instalala una sola vez por máquina"
 echo "(quedan disponibles en todos los proyectos, no son parte del toolkit)."
 echo "Ver skills/CATALOG.md para agregar herramientas nuevas a este chequeo."
+
+# ---------- Toolchain móvil (solo si el proyecto tiene app Flutter) ----------
+# No instala nada: solo reporta qué falta. Se busca pubspec.yaml hasta 3
+# niveles (ej. mobile-x/pubspec.yaml), excluyendo el propio toolkit y node_modules.
+PUBSPEC=$(find . -maxdepth 3 -name pubspec.yaml \
+  -not -path "./tools/*" -not -path "*/node_modules/*" 2>/dev/null | head -1)
+
+if [ -n "$PUBSPEC" ]; then
+  echo ""
+  echo "📱 Proyecto Flutter detectado ($PUBSPEC) — verificando toolchain móvil..."
+  echo ""
+
+  check_cmd() {
+    if command -v "$1" >/dev/null 2>&1; then
+      echo "  ✅ $1 — $(command -v "$1")"
+    else
+      echo "  ⚠️  $1 — no encontrado en el PATH de esta terminal"
+    fi
+  }
+
+  check_cmd flutter
+  check_cmd java
+
+  if [ -n "$ANDROID_HOME" ]; then
+    echo "  ✅ Android SDK — ANDROID_HOME=$ANDROID_HOME"
+  elif [ -n "$ANDROID_SDK_ROOT" ]; then
+    echo "  ✅ Android SDK — ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
+  elif command -v adb >/dev/null 2>&1; then
+    echo "  ✅ Android SDK — adb en $(command -v adb)"
+  else
+    echo "  ⚠️  Android SDK — no encontrado (ni ANDROID_HOME, ni ANDROID_SDK_ROOT, ni adb)"
+  fi
+
+  if [ "$(uname -s)" = "Darwin" ]; then
+    check_cmd xcodebuild
+    check_cmd pod
+  else
+    echo "  ℹ️  iOS — requiere Mac (Xcode + CocoaPods) o CI macOS; no se verifica en esta máquina."
+  fi
+
+  echo ""
+  echo "Para instalar lo que falte: https://docs.flutter.dev/get-started/install"
+  echo "Después confirmá con: flutter doctor -v"
+  echo "En Windows, cada terminal (PowerShell, Git Bash, WSL) tiene su propio PATH:"
+  echo "verificá en la misma terminal con la que vas a trabajar."
+fi

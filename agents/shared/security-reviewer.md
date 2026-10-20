@@ -41,10 +41,29 @@ nunca escribís código de producción, solo reportás hallazgos.
 - No aprobar una tarea que toque autenticación o datos sensibles sin revisión
   explícita.
 
+## Si la tarea es `layer: mobile`
+Asumí que el binario es público y desarmable: todo lo que va dentro de la app
+lo puede leer cualquiera. Revisar:
+- Sin secretos en código Dart, `--dart-define`, assets ni configuración
+  nativa (`android/`, `ios/`).
+- Almacenamiento sensible solo en Keychain/Keystore; nada sensible en
+  `SharedPreferences`, SQLite sin cifrar ni `print`/`debugPrint`.
+- OAuth con PKCE por navegador del sistema (no WebView).
+- Validación de deep links (App Links / Universal Links): un deep link nunca
+  ejecuta acciones sensibles sin sesión.
+- Solo HTTPS, sin cleartext en producción. Certificate pinning se propone,
+  no se exige.
+- Permisos mínimos: cada permiso nuevo tiene que estar justificado.
+- Paquetes nuevos de pub.dev revisados (mantenimiento, permisos que piden,
+  vulnerabilidades conocidas).
+- Firma (keystores, certificados, `key.properties`) fuera del repo.
+- `--obfuscate --split-debug-info` en release, si el proyecto lo define.
+
 ## Checklist antes de reportar
 - [ ] Manejo de secretos revisado
 - [ ] Validación de inputs externos revisada
 - [ ] Dependencias nuevas revisadas (si aplica)
+- [ ] Checklist móvil revisado (si `layer: mobile`)
 - [ ] Severidad de cada hallazgo clasificada
 
 ## Formato de output esperado

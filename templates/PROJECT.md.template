@@ -11,6 +11,15 @@
 | DB | {{PATH_DB}} | {{MOTOR_DB}} |
 | Backend | {{PATH_BACKEND}} | {{FRAMEWORK_BACKEND}} |
 | Frontend | {{PATH_FRONTEND}} | {{FRAMEWORK_FRONTEND}} |
+| Mobile (opcional) | {{PATH_MOBILE}} | Flutter — Android + iOS |
+
+## Mobile (borrar si el proyecto no tiene app móvil)
+- Gestor de estado: {{GESTOR_DE_ESTADO_MOBILE}}
+- Application ID (Android) / Bundle ID (iOS): {{APPLICATION_ID}} / {{BUNDLE_ID}}
+- Ambientes: {{AMBIENTES_MOBILE_DART_DEFINE_O_FLAVORS}}
+- minSdk / iOS deployment target: {{MIN_SDK}} / {{IOS_DEPLOYMENT_TARGET}}
+- Build iOS: {{MAC_LOCAL_O_CI_MACOS}}
+- Publicación: {{COMO_SE_PUBLICA_EN_PLAY_STORE_Y_APP_STORE}}
 
 ## Convenciones
 {{ESTILO_DE_CODIGO_COMMITS_BRANCHES_ETC}}

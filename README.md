@@ -25,7 +25,7 @@ monorepo — ver "Topologías de proyecto soportadas" más abajo.
   pero el frontmatter difiere (nombres de tools, campo `model`). Por eso el
   cuerpo del prompt vive una sola vez en `agents/shared/`, y hay un
   frontmatter por proveedor en `agents/frontmatter/{claude,gemini}/`. Codex
-  no tiene ese mecanismo de subagente confirmado, así que ahí los 5 roles se
+  no tiene ese mecanismo de subagente confirmado, así que ahí los roles ADF se
   exponen como **skills** en su lugar (`.codex/skills/<rol>/SKILL.md`), no
   como agentes.
   Un script (`agents/build.sh`) combina cuerpo + frontmatter y genera
@@ -62,7 +62,7 @@ setup/
 ├── bootstrap.sh                   # arma un proyecto NUEVO de punta a punta (recomendado)
 ├── link.sh                        # instala/actualiza symlinks en un proyecto ya clonado (auto-verificado)
 ├── update.sh                      # trae la última versión del toolkit (git pull adentro)
-└── check-global-tools.sh          # verifica graphify/ui-ux-pro-max instalados globalmente
+└── check-global-tools.sh          # verifica graphify/ui-ux-pro-max globales (+ toolchain Flutter si hay pubspec.yaml)
 .gitattributes                     # fuerza LF en .sh (evita error CRLF en Windows)
 ```
 
@@ -285,6 +285,31 @@ graphify affected "<símbolo>" --graph graphify-out/graph.json  # qué se rompe 
 ```
 El path es el mismo para los tres CLIs — no importa con cuál trabajes en un
 momento dado.
+
+## Capa móvil (Flutter, Android + iOS)
+
+El rol `mobile-dev` implementa la app de usuario final para Android e iOS con
+Flutter (un solo código Dart): pantallas, widgets, estado, consumo de API,
+permisos y configuración nativa. Es **opcional por proyecto**: solo aplica si
+`PROJECT.md` declara la capa Mobile.
+
+- **Web y móvil son capas separadas**: `frontend-dev` hace la web y
+  `mobile-dev` la app. Comparten el contrato de API (definido por
+  `backend-dev`), no el código. Si pedís algo sin decir la plataforma y el
+  proyecto tiene ambas, el orchestrator pregunta.
+- **Validación**: toda tarea `layer: mobile` pasa siempre por
+  `security-reviewer` (binario público: secretos, almacenamiento, OAuth,
+  deep links, permisos) y por `qa-tester` (resultado por plataforma).
+- **Restricción de iOS**: iOS solo compila, firma y corre en simulador en
+  macOS con Xcode. Fuera de Mac, lo de iOS queda como `needs_review` / `not_run`
+  explícito en la evidencia — nunca como verificado. La publicación en Play
+  Store y App Store la hace el usuario o el CI.
+- **Toolchain por máquina**: Flutter + Android SDK en todas; Xcode +
+  CocoaPods solo en Mac. Verificar con `flutter doctor -v` (o con
+  `check-global-tools.sh`, que lo chequea si encuentra un `pubspec.yaml`).
+  Guía de instalación: https://docs.flutter.dev/get-started/install
+- **Ubicación sugerida**: un repo/carpeta hija `mobile-<proyecto>/`, al lado
+  de `backend-<proyecto>/` y `frontend-<proyecto>/`.
 
 ## Modificar un agente (rol ADF)
 
