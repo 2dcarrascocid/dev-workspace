@@ -388,6 +388,25 @@ $(echo "$hits" | head -n 40 | cut -c1-160 | sed 's/^/            /')"
 fi
 end_check
 
+# ---------- 9. Topología B con raíz versionada ----------
+begin_check "9. Raíz versionada: repos hijos ignorados por el .gitignore de la raíz"
+if [ -z "$PROJECT" ]; then
+  skip "solo con --project"
+elif [ ! -e "$PROJECT/.git" ]; then
+  note "la raíz no es un repo git (nada que revisar)"
+else
+  children=0
+  for d in "$PROJECT"/*/; do
+    [ -e "$d.git" ] || continue
+    children=$((children + 1))
+    child=$(basename "$d")
+    git -C "$PROJECT" check-ignore -q "$child" \
+      || warn "$child/: repo hijo no ignorado por el .gitignore de la raíz (ver templates/root-tracking.gitignore.template)"
+  done
+  [ "$children" -gt 0 ] || note "sin repos hijos en el primer nivel (topología A/C, nada que revisar)"
+fi
+end_check
+
 echo ""
 echo "Resumen: $TOTAL_OK OK, $TOTAL_WARN WARN, $TOTAL_FAIL FAIL, $TOTAL_SKIP SKIP"
 [ "$TOTAL_FAIL" -eq 0 ]

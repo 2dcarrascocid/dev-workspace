@@ -1,0 +1,22 @@
+# --- Topología B con raíz versionada ---
+# Para una carpeta padre que agrupa repos hijos independientes y que se
+# versiona como repo ligero aparte (privado), solo para sincronizar entre
+# máquinas el contexto y el estado: PROJECT.md y .adf/ESTADO.md.
+# Lista blanca: se ignora todo y se permite solo lo de abajo. Los repos hijos
+# (y tools/dev-toolkit) quedan fuera; cada uno se versiona en su propio git.
+# Nunca agregues código, secretos ni CI a este repo.
+/*
+!/.gitignore
+!/PROJECT.md
+
+# .adf/ hace falta para llegar a ESTADO.md; el resto de su contenido sigue ignorado.
+!/.adf/
+/.adf/*
+!/.adf/ESTADO.md
+
+# Skills locales del proyecto: skills/local/ es la fuente que link.sh enlaza en
+# .<cli>/skills/local/; versionarla las sincroniza entre máquinas.
+# Los standards de negocio NO van acá: siguen dentro del repo hijo correspondiente.
+!/skills/
+/skills/*
+!/skills/local/

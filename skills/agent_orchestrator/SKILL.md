@@ -96,6 +96,10 @@ delegación:
 - **Dónde**: `.adf/ESTADO.md` en la raíz del proyecto (plantilla en
   `templates/ESTADO.md.template`; `link.sh` la copia si no existe). Si hay
   un `ESTADO.md` heredado en la raíz, usá ese.
+- **Raíz versionada**: si la raíz es un repo git, al iniciar sesión recordale
+  al humano hacer `git pull` de la raíz antes de leer `ESTADO.md`; si
+  `ESTADO.md` cambió, al cerrar la tarea anotá en `## Para ti` el commit +
+  push de la raíz (no lo hagas vos).
 - **Al iniciar sesión**: leelo antes de planificar. Los frentes ⏳ y ❌ son
   el punto de partida; no re-planifiques lo que ya está ✅.
 - **Antes de reportar el cierre de cualquier tarea** (también si queda

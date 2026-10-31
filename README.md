@@ -72,6 +72,7 @@ standards/
 templates/
 ├── PROJECT.md.template            # a copiar y completar en cada proyecto nuevo
 ├── ESTADO.md.template             # estado por frente + "Para ti" (link.sh lo copia a .adf/)
+├── root-tracking.gitignore.template # lista blanca para versionar la raíz en topología B
 └── .gitignore.template            # base que project_bootstrap completa solo
 setup/
 ├── bootstrap.sh                   # arma un proyecto NUEVO de punta a punta (recomendado)
@@ -115,6 +116,14 @@ una decisión válida por proyecto — no el default.
 El setup de `link.sh` es idéntico en los tres casos. Lo único que cambia es
 el `.graphifyignore` para la base de conocimiento (ver más abajo) y, en el
 escenario B, que no hay git hooks posibles a nivel raíz.
+
+**B con raíz versionada (opcional).** En B, `PROJECT.md` y `.adf/ESTADO.md`
+viven en la raíz sin git y no se sincronizan entre máquinas. Si lo necesitás,
+versioná la raíz como repo ligero aparte: **privado**, solo contexto y estado,
+nunca código, secretos ni CI. Los repos hijos quedan fuera por lista blanca.
+1. En la raíz: `git init` y copiá `tools/dev-toolkit/templates/root-tracking.gitignore.template` como `.gitignore`.
+2. `git add -A && git status`: deben aparecer solo `.gitignore`, `PROJECT.md`, `.adf/ESTADO.md` y `skills/local/`.
+3. Commit, remoto privado y push. Verificá con `bash tools/dev-toolkit/setup/check-adf.sh --project .`.
 
 ## Uso en un proyecto nuevo (recomendado — un solo comando)
 
