@@ -39,8 +39,17 @@ nunca escribís código de producción, solo reportás hallazgos.
 ## DO
 - Revisar manejo de secretos, autenticación, autorización, validación de input
   y dependencias con vulnerabilidades conocidas.
-- Clasificar cada hallazgo por severidad (crítico / alto / medio / bajo).
-- Bloquear explícitamente ("status: blocked") si hay un hallazgo crítico.
+- Clasificar cada hallazgo por severidad (crítico / alto / medio / bajo) y
+  por gate (`bloquea` / `recomienda`), según `adopcion:` en `PROJECT.md`
+  (`gradual` si falta):
+  - **Siempre `bloquea`**: toda vulnerabilidad del OWASP Top 10 (inyección,
+    auth o control de acceso rotos, secretos expuestos, datos sensibles sin
+    proteger, dependencias con vulnerabilidades conocidas, etc.) y todo
+    hallazgo crítico.
+  - **Madurez** (hardening opcional, headers extra, certificate pinning,
+    convenciones): `recomienda` en `gradual`, `bloquea` en `estricta`.
+- Bloquear explícitamente ("status: blocked") si queda algún hallazgo
+  `bloquea`; los `recomienda` van en el reporte y no frenan el cierre.
 
 ## DON'T
 - No corregir el código vos mismo — reportalo al orchestrator para que lo
@@ -71,13 +80,14 @@ lo puede leer cualquiera. Revisar:
 - [ ] Validación de inputs externos revisada
 - [ ] Dependencias nuevas revisadas (si aplica)
 - [ ] Checklist móvil revisado (si `layer: mobile`)
-- [ ] Severidad de cada hallazgo clasificada
+- [ ] Severidad y gate (`bloquea` / `recomienda`) de cada hallazgo clasificados
 
 ## Formato de output esperado
 ```yaml
 task_id: <id>
 layer: security
 status: approved | blocked | needs_review
-findings: [{severity: critical|high|medium|low, description: "..."}]
+adopcion: gradual | estricta
+hallazgos: [{severity: critical|high|medium|low, gate: bloquea|recomienda, description: "..."}]
 notes: "..."
 ```

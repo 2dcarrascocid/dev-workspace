@@ -24,6 +24,22 @@
 ## Convenciones
 {{ESTILO_DE_CODIGO_COMMITS_BRANCHES_ETC}}
 
+## Pruebas
+- Comando por capa: {{COMANDO_DE_PRUEBAS_POR_CAPA}}
+- CI: {{ARCHIVO_DE_PIPELINE_O_NINGUNO}}
+
+## Adopción ADF
+adopcion: gradual
+<!-- gradual (por defecto, también si falta la línea):
+     - madurez (E2E, ADR, convenciones de commits) es "recomienda";
+     - cambio sin prueba: "bloquea" si corrige un bug o toca auth,
+       autorización, datos personales o permisos; si no, "recomienda" y
+       queda en ESTADO.md un frente "agregar pruebas a <ruta>".
+     estricta: todo lo anterior "bloquea".
+     En los dos modos bloquean siempre: pruebas fallidas, OWASP y deploy sin
+     pruebas. Sin infraestructura de pruebas, ninguna tarea se aprueba: queda
+     needs_review hasta configurarlas. -->
+
 ## Notas de despliegue
 {{COMO_SE_DEPLOYEA_CADA_CAPA}}
 

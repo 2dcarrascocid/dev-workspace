@@ -24,6 +24,16 @@ capa hizo qué, y qué validación se aplicó.
 Cada archivo debe incluir: timestamp, agente que lo generó, status, y el
 output estructurado que ese agente devolvió (ver formato en cada agente).
 
+Además, siempre:
+- **`plan.md`**: fichas de módulo usadas (`.adf/modules/<id>.md`, con su
+  `estado` en ese momento) y fichas en borrador creadas en la tarea.
+- **`qa-report.md` / `security-review.md`**: resultado del gate — comando de
+  pruebas ejecutado y su resultado real, `adopcion` vigente, y cada hallazgo
+  con su gate (`bloquea` / `recomienda`). Las rutas cambiadas sin prueba
+  que quedaron en `recomienda` se registran como "sin cobertura".
+- **`qa-report.md`**: findings creados (`.adf/findings/<id>.md`), con la ruta
+  de su prueba de regresión y si falló antes / pasó después del fix.
+
 ## Reglas
 - Nunca sobrescribas evidencia de tareas anteriores — cada `task_id` tiene su
   propia carpeta.
@@ -33,8 +43,9 @@ output estructurado que ese agente devolvió (ver formato en cada agente).
 ## Certificación liviana
 
 Complementa la evidencia de arriba, no la reemplaza. **Solo se escribe cuando
-el Validator aprueba la tarea** (`status: approved`); si queda `blocked`,
-`failed` o `needs_review`, no se genera certificación.
+el Validator aprueba la tarea** (`status: approved`, sin ningún hallazgo
+`bloquea`; los `recomienda` no la impiden); si queda `blocked`, `failed` o
+`needs_review`, no se genera certificación.
 
 ### Dónde
 ```

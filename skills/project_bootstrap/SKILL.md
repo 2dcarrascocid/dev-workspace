@@ -38,7 +38,12 @@ Python, `Npgsql`/`Microsoft.EntityFrameworkCore.SqlServer` en .NET).
    completar PROJECT.md con una suposición no confirmada.
 4. Proponer el `PROJECT.md` completo (usando `templates/PROJECT.md.template`
    del dev-toolkit como base) y mostrarlo antes de escribirlo, para que el
-   usuario confirme o corrija.
+   usuario confirme o corrija. Incluye:
+   - `## Pruebas`: el comando real de cada capa, sacado del manifiesto
+     (`scripts.test`, `pytest`, `dotnet test`, etc.) y el archivo de CI si
+     existe. Sin señal clara, preguntar.
+   - `## Adopción ADF`: `adopcion: gradual` salvo que el usuario pida
+     `estricta`. Mencionar en la propuesta qué cambia entre los dos modos.
 5. Solo escribir el archivo después de la confirmación explícita del usuario.
 
 ## También genera/actualiza el `.gitignore` de la raíz

@@ -1,0 +1,20 @@
+---
+id: F-{{AAAAMMDD-HHMMSS}}
+task_id: {{TASK_ID}}                  # evidencia en .claude/evidence/<task-id>/
+prueba_regresion: {{RUTA_EXACTA_DEL_TEST}}   # relativa al repo; falla antes del fix, pasa después
+candidato_standard: no                # si | no — si: el patrón ya apareció en otro finding
+---
+
+# {{TITULO_CORTO_DEL_BUG}}
+
+_Finding ADF. Vive en `.adf/findings/<id>.md` del repo donde está el bug (en
+topología B, el repo hijo, nunca la raíz sin git)._
+
+## Síntoma
+{{QUE_SE_OBSERVA_Y_COMO_SE_REPRODUCE}}
+
+## Causa raíz
+{{POR_QUE_PASA}}
+
+## Corrección
+{{QUE_SE_CAMBIO_Y_DONDE}}

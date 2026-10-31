@@ -137,6 +137,21 @@ delegación:
   aprobada → Modo Consultivo (detenerse, señalarlo, esperar indicación).
   Los borradores no son criterio aprobado.
 
+## Findings (bugs confirmados)
+
+- **Dónde**: `.adf/findings/<id>.md` (plantilla en
+  `templates/FINDING.md.template`), con la misma regla de topologías que las
+  fichas: A/C en `.adf/` de la raíz, B en `<repo-hijo>/.adf/`.
+- Cuando `qa-tester` confirma un bug, devuelve `finding_propuesto`; vos
+  escribís el archivo y delegás al Specialist de la capa, en este orden:
+  1) la prueba de regresión en la ruta del finding, 2) `qa-tester` verifica
+  que falla, 3) el fix, 4) `qa-tester` verifica que pasa.
+- Si `qa-tester` propone un standard (patrón repetido en 2+ findings), va
+  por Modo Consultivo: nadie lo aplica sin aprobación del humano.
+- Por cada ruta en `sin_cobertura` del `qa-tester`, agregá en `ESTADO.md`
+  un frente ⏳ "agregar pruebas a <ruta>". Si cerró `needs_review` por falta
+  de infraestructura de pruebas, el frente es "configurar pruebas".
+
 ## Contrato de entrada a un Specialist
 ```yaml
 task_id: <id único>
