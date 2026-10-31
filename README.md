@@ -4,7 +4,8 @@ Espacio de trabajo personal con la arquitectura ADF base (agentes + skills,
 genérica, sin información de negocio) y una librería curada de skills de
 terceros que aportan al desarrollo (ej. optimización de tokens con grafos de
 conocimiento, sistemas de estilos frontend, etc.). Compatible con
-**Claude Code**, **Gemini CLI** y **Codex CLI** a la vez, sin duplicar
+**Claude Code**, **Gemini CLI**, **Codex CLI**, **GitHub Copilot** y
+**OpenCode** a la vez, sin duplicar
 contenido.
 
 El contenido de negocio (stack, convenciones, paths) NUNCA vive acá — vive en
@@ -14,12 +15,14 @@ Este toolkit se aplica igual en **Windows, Linux y Mac**, e igual sea el
 proyecto un repo único, una carpeta padre con varios repos hijos, o un
 monorepo — ver "Topologías de proyecto soportadas" más abajo.
 
-## Por qué funciona con los tres CLIs
+## Por qué funciona con los cinco CLIs
 
-- **Skills**: Claude Code, Gemini CLI y Codex CLI implementan el mismo
+- **Skills**: Claude Code, Gemini CLI, Codex CLI, Copilot y OpenCode implementan el mismo
   estándar abierto "Agent Skills" (carpeta con `SKILL.md`). La carpeta
   `skills/` de este repo se symlinkea tal cual a `.claude/skills/base`,
-  `.gemini/skills/base` y `.codex/skills/base` — cero duplicación.
+  `.gemini/skills/base` y `.codex/skills/base` — cero duplicación. Copilot
+  (`.github/skills/<skill>`) y OpenCode (`.opencode/skills/<skill>`) esperan
+  cada skill a un solo nivel, así que ahí se symlinkea skill por skill.
 - **Agentes (subagentes)**: Claude Code y Gemini CLI tienen subagentes reales
   (contexto aislado); el mecanismo es equivalente (.md + YAML frontmatter)
   pero el frontmatter difiere (nombres de tools, campo `model`). Por eso el
@@ -29,19 +32,28 @@ monorepo — ver "Topologías de proyecto soportadas" más abajo.
   exponen como **skills** en su lugar (`.codex/skills/<rol>/SKILL.md`), no
   como agentes.
   Un script (`agents/build.sh`) combina cuerpo + frontmatter y genera
-  `agents/dist/{claude,gemini,codex}/`, que es lo que se symlinkea en cada
-  proyecto.
+  `agents/dist/{claude,gemini,codex,copilot,opencode}/`, que es lo que se
+  symlinkea en cada proyecto.
+- **Copilot** (VS Code Chat, Copilot CLI y coding agent) usa *custom agents*
+  en `.github/agents/<rol>.agent.md` (tools con alias `read`/`edit`/`search`/
+  `execute`). **OpenCode** usa subagentes en `.opencode/agents/<rol>.md`
+  (`mode: subagent`; los roles de solo lectura llevan `permission.edit: deny`).
+  Ninguno de los dos fija `model`: usan el que tengas elegido en la sesión.
 - **Contexto de proyecto**: `CLAUDE.md`, `GEMINI.md` y `AGENTS.md` en cada
   proyecto son symlinks al mismo `PROJECT.md` — el negocio se escribe una
-  sola vez.
+  sola vez. Codex, Copilot y OpenCode leen `AGENTS.md`.
+- **`/new-task`**: OpenCode usa el mismo formato de comando que Claude
+  (`$ARGUMENTS`), así que se symlinkea `commands/new-task.md` tal cual a
+  `.opencode/commands/`. Copilot usa *prompt files*, con su propia versión en
+  `commands/copilot/new-task.prompt.md` → `.github/prompts/`.
 
 ## Estructura
 
 ```
 agents/
 ├── shared/                        # cuerpo del prompt por rol, provider-agnostic
-├── frontmatter/{claude,gemini,codex}/  # config específica por CLI
-├── dist/{claude,gemini,codex}/    # generado por build.sh — esto es lo que se symlinkea
+├── frontmatter/{claude,gemini,codex,copilot,opencode}/  # config específica por CLI
+├── dist/{claude,gemini,codex,copilot,opencode}/    # generado por build.sh — esto es lo que se symlinkea
 └── build.sh
 skills/
 ├── agent_orchestrator/SKILL.md    # coordina el flujo completo
@@ -51,7 +63,8 @@ skills/
 ├── secrets_scanner/SKILL.md       # detecta secretos reales en archivos de ejemplo
 └── CATALOG.md                     # herramientas de terceros (graphify, ui-ux-pro-max, etc.)
 commands/
-├── new-task.md                    # solo Claude Code — atajo para agent_orchestrator
+├── new-task.md                    # Claude Code y OpenCode — atajo para agent_orchestrator
+├── copilot/new-task.prompt.md     # mismo atajo como prompt file de Copilot
 └── README.md
 standards/
 └── _TEMPLATE.md                   # plantilla genérica para standards de proyecto (viven en local)
@@ -111,7 +124,8 @@ bash ~/bootstrap.sh mi-proyecto-nuevo
 
 Hace `git init` (si corresponde), clona el toolkit, corre `link.sh`, y crea
 `PROJECT.md`/`CLAUDE.md`/`GEMINI.md`/`AGENTS.md`. Después, adentro de una
-sesión de Claude Code / Gemini CLI / Codex CLI en la raíz del proyecto:
+sesión de Claude Code / Gemini CLI / Codex CLI / Copilot / OpenCode en la
+raíz del proyecto:
 
 ```
 detectá el stack de este proyecto y completá PROJECT.md
@@ -152,7 +166,7 @@ suficiente por sí solo; hace falta la variable `MSYS` además.
 Si `link.sh` sigue fallando después de aplicar el fix, buscá restos de una
 corrida previa interrumpida: carpetas con nombre random (8 caracteres
 alfanuméricos) dentro de `.claude/agents/`, `.claude/skills/`, `.gemini/...`,
-`.codex/...`. Son temporales que `link.sh` usa para crear el symlink de
+`.codex/...`, `.github/...`, `.opencode/...`. Son temporales que `link.sh` usa para crear el symlink de
 forma atómica y no llegaron a promoverse. Borralas junto con el symlink que
 falló, y reintentá:
 ```bash
@@ -167,7 +181,7 @@ o skill instalada en una terminal **no aparece en las otras**. Reglas
 prácticas:
 - Elegí una terminal de trabajo por proyecto y quedate ahí durante todo el
   setup (no alternes Git Bash ↔ WSL a mitad de tarea).
-- Instalar `claude`/`gemini`/`codex` en una terminal no lo hace disponible en
+- Instalar `claude`/`gemini`/`codex`/`copilot`/`opencode` en una terminal no lo hace disponible en
   las otras. Confirmá con `which <comando>` en la terminal específica que
   estás usando.
 - `check-global-tools.sh` ya contempla esto: detecta si corre en WSL y
@@ -218,6 +232,10 @@ AGENTS.md
 .claude/
 .gemini/
 .codex/
+.opencode/
+.github/agents/
+.github/skills/
+.github/prompts/
 ```
 
 **Escenario B** (carpeta padre sin `.git`, repos hijos independientes): cada
@@ -232,6 +250,10 @@ AGENTS.md
 .claude/
 .gemini/
 .codex/
+.opencode/
+.github/agents/
+.github/skills/
+.github/prompts/
 !repo-hijo-1/**
 !repo-hijo-2/**
 ```
@@ -283,7 +305,7 @@ graphify query "<pregunta>" --graph graphify-out/graph.json
 graphify god-nodes --top 15 --graph graphify-out/graph.json    # mapa de arquitectura real
 graphify affected "<símbolo>" --graph graphify-out/graph.json  # qué se rompe si cambio X
 ```
-El path es el mismo para los tres CLIs — no importa con cuál trabajes en un
+El path es el mismo para todos los CLIs — no importa con cuál trabajes en un
 momento dado.
 
 ## Capa móvil (Flutter, Android + iOS)
@@ -311,10 +333,39 @@ permisos y configuración nativa. Es **opcional por proyecto**: solo aplica si
 - **Ubicación sugerida**: un repo/carpeta hija `mobile-<proyecto>/`, al lado
   de `backend-<proyecto>/` y `frontend-<proyecto>/`.
 
+## Usar el toolkit con GitHub Copilot y OpenCode
+
+Después de `link.sh`, ambos funcionan sin configuración extra por proyecto.
+
+**GitHub Copilot**
+- **VS Code (Chat / agent mode)**: abrí la carpeta raíz del proyecto. Los
+  roles aparecen en el selector de agentes del Chat (`backend-dev`,
+  `qa-tester`, …), `/new-task` aparece como prompt, y `AGENTS.md` se usa como
+  contexto. Si las skills no se activan, revisá que esté habilitado
+  `chat.useAgentSkills` (Settings → buscar "agent skills").
+- **Copilot CLI**: `npm install -g @github/copilot`, después `copilot` en la
+  raíz del proyecto y `/login` la primera vez (requiere suscripción de
+  Copilot). Lee los mismos `.github/agents/` y `.github/skills/`; `/agent`
+  lista los roles.
+- **Coding agent (github.com)**: lee `.github/agents/` del repo remoto, así
+  que solo los vería si están commiteados con contenido real (los symlinks
+  apuntan a `tools/dev-toolkit/`, que no viaja con el repo). El toolkit no lo
+  hace por defecto; es opcional por proyecto.
+
+**OpenCode**
+- `npm install -g @opencode/cli`, después `opencode auth login` para elegir
+  proveedor (Anthropic, OpenAI, Copilot, etc.).
+- `opencode` en la raíz del proyecto. Los roles son subagentes: se invocan
+  con `@backend-dev …` o los delega el agente principal; `/new-task <tarea>`
+  arranca el flujo ADF.
+- Verificar que los detecta: `opencode debug agents` (deben aparecer los
+  roles con `"mode": "subagent"`).
+
 ## Modificar un agente (rol ADF)
 
-1. Editar el cuerpo en `agents/shared/<rol>.md` (aplica a los tres CLIs), y/o
-   el frontmatter en `agents/frontmatter/{claude,gemini}/<rol>.md`.
+1. Editar el cuerpo en `agents/shared/<rol>.md` (aplica a todos los CLIs), y/o
+   el frontmatter en `agents/frontmatter/<cli>/<rol>.md`. El cuerpo en
+   `shared/` va **sin** frontmatter (build.sh lo antepone).
 2. Correr `bash agents/build.sh` para regenerar `agents/dist/`.
 3. Commit + push. Cada proyecto lo recibe con `update.sh` + `link.sh`.
 
@@ -326,7 +377,7 @@ Ver `skills/CATALOG.md`.
 
 Si tu proyecto tiene repos hijos separados (ej. `backend-x/`, `frontend-x/`,
 cada uno con su propio `.git`), **siempre abrí Claude Code / Gemini CLI /
-Codex CLI desde la raíz del proyecto padre**, nunca parado adentro de un
+Codex CLI / Copilot / OpenCode desde la raíz del proyecto padre**, nunca parado adentro de un
 repo hijo.
 
 Motivo: la detección de agentes/skills se corta en el borde de cada
@@ -344,7 +395,7 @@ copiados, no como link)**
 variable `MSYS=winsymlinks:nativestrict`, el Modo Desarrollador solo no
 alcanza.
 
-**`claude`/`gemini`/`codex` da "command not found" después de instalarlo**
+**`claude`/`gemini`/`codex`/`copilot`/`opencode` da "command not found" después de instalarlo**
 → Cada CLI (y cada terminal — WSL, Git Bash, PowerShell son entornos
 distintos con su propio PATH) necesita su propia instalación. Confirmá con
 `which <comando>` en la terminal específica que estás usando.

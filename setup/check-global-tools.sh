@@ -47,6 +47,22 @@ check_tool "graphify" "graphify" "uv tool install graphifyy && graphify install 
 check_tool "ui-ux-pro-max" "ui-ux-pro-max" "npm install -g ui-ux-pro-max-cli && uipro init --ai claude --global && uipro init --ai gemini --global"
 
 echo ""
+echo "🤖 CLIs de agentes disponibles en esta terminal:"
+for cli in "claude|npm install -g @anthropic-ai/claude-code" \
+           "gemini|npm install -g @google/gemini-cli" \
+           "codex|npm install -g @openai/codex" \
+           "copilot|npm install -g @github/copilot  (y después: copilot → /login)" \
+           "opencode|npm install -g @opencode/cli  (y después: opencode auth login)"; do
+  cmd="${cli%%|*}"
+  if command -v "$cmd" >/dev/null 2>&1; then
+    echo "  ✅ $cmd — $(command -v "$cmd")"
+  else
+    echo "  ➖ $cmd — no instalado (opcional). Instalar con: ${cli#*|}"
+  fi
+done
+echo "  ℹ️  Copilot en VS Code (Chat/agent mode) no necesita CLI: usa .github/ directamente."
+
+echo ""
 echo "Si falta alguna y la usás seguido, instalala una sola vez por máquina"
 echo "(quedan disponibles en todos los proyectos, no son parte del toolkit)."
 echo "Ver skills/CATALOG.md para agregar herramientas nuevas a este chequeo."

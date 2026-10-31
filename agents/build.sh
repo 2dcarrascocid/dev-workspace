@@ -7,8 +7,8 @@
 set -e
 cd "$(dirname "$0")"
 
-# Claude y Gemini: subagentes, un archivo .md por rol
-for provider in claude gemini; do
+# Claude, Gemini y OpenCode: subagentes, un archivo .md por rol
+for provider in claude gemini opencode; do
   mkdir -p "dist/$provider"
   for body in shared/*.md; do
     name=$(basename "$body")
@@ -34,4 +34,16 @@ for body in shared/*.md; do
   cat "$fm" "shared/$name.md" > "dist/codex/$name/SKILL.md"
 done
 
-echo "Generado: agents/dist/claude/*.md, agents/dist/gemini/*.md, agents/dist/codex/*/SKILL.md"
+# Copilot: custom agents, la extensión .agent.md es requisito del formato
+mkdir -p dist/copilot
+for body in shared/*.md; do
+  name=$(basename "$body" .md)
+  fm="frontmatter/copilot/$name.md"
+  if [ ! -f "$fm" ]; then
+    echo "Aviso: falta frontmatter/copilot/$name.md, se omite."
+    continue
+  fi
+  cat "$fm" "$body" > "dist/copilot/$name.agent.md"
+done
+
+echo "Generado: agents/dist/{claude,gemini,opencode}/*.md, agents/dist/codex/*/SKILL.md, agents/dist/copilot/*.agent.md"

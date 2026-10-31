@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Instala el dev-toolkit en el proyecto actual: symlinks para Claude Code,
-# Gemini CLI y Codex CLI, + archivos de contexto (CLAUDE.md/GEMINI.md/AGENTS.md).
+# Gemini CLI, Codex CLI, GitHub Copilot y OpenCode, + archivos de contexto
+# (CLAUDE.md/GEMINI.md/AGENTS.md).
 # Se auto-verifica: si un symlink no se crea de verdad (típico en Windows sin
 # Modo Desarrollador), lo detecta y te avisa en vez de fallar en silencio.
 #
@@ -54,6 +55,36 @@ for d in "$TOOLKIT_DIR"/agents/dist/codex/*/; do
   ln -sfn "../../$d" ".codex/skills/$role"
 done
 
+# ---------- GitHub Copilot (VS Code Chat, Copilot CLI, coding agent) ----------
+# Skills una por una: Copilot espera .github/skills/<nombre>/SKILL.md directo.
+mkdir -p .github/agents .github/skills .github/prompts .github/skills/local
+for f in "$TOOLKIT_DIR"/agents/dist/copilot/*.agent.md; do
+  ln -sfn "../../$f" ".github/agents/$(basename "$f")"
+done
+for d in "$TOOLKIT_DIR"/skills/*/; do
+  skill=$(basename "$d")
+  ln -sfn "../../$TOOLKIT_DIR/skills/$skill" ".github/skills/$skill"
+  verify_link ".github/skills/$skill"
+done
+for f in "$TOOLKIT_DIR"/commands/copilot/*.prompt.md; do
+  ln -sfn "../../$f" ".github/prompts/$(basename "$f")"
+done
+
+# ---------- OpenCode ----------
+mkdir -p .opencode/agents .opencode/skills .opencode/commands .opencode/skills/local
+for f in "$TOOLKIT_DIR"/agents/dist/opencode/*.md; do
+  ln -sfn "../../$f" ".opencode/agents/$(basename "$f")"
+done
+for d in "$TOOLKIT_DIR"/skills/*/; do
+  skill=$(basename "$d")
+  ln -sfn "../../$TOOLKIT_DIR/skills/$skill" ".opencode/skills/$skill"
+  verify_link ".opencode/skills/$skill"
+done
+for f in "$TOOLKIT_DIR"/commands/*.md; do
+  [ "$(basename "$f")" = "README.md" ] && continue
+  ln -sfn "../../$f" ".opencode/commands/$(basename "$f")"
+done
+
 # ---------- Contexto del proyecto (siempre, no solo en bootstrap) ----------
 if [ ! -f PROJECT.md ]; then
   cp "$TOOLKIT_DIR/templates/PROJECT.md.template" PROJECT.md
@@ -70,7 +101,14 @@ echo "  .gemini/agents/*.md    -> agents/dist/gemini/*.md (uno por uno)"
 echo "  .gemini/skills/base    -> skills/ (mismas skills, mismo formato)"
 echo "  .codex/skills/base     -> skills/ (mismas skills, mismo formato)"
 echo "  .codex/skills/<rol>    -> los roles ADF, expuestos como skills"
+echo "  .github/agents/*.agent.md -> agents/dist/copilot/ (Copilot custom agents)"
+echo "  .github/skills/<skill>  -> skills/<skill> (una por una)"
+echo "  .github/prompts/*.prompt.md -> commands/copilot/ (/new-task en Copilot Chat)"
+echo "  .opencode/agents/*.md   -> agents/dist/opencode/ (subagentes OpenCode)"
+echo "  .opencode/skills/<skill> -> skills/<skill> (una por una)"
+echo "  .opencode/commands/*.md -> commands/*.md (/new-task en OpenCode)"
 echo "  CLAUDE.md, GEMINI.md, AGENTS.md -> symlinks a PROJECT.md"
+echo "  (Copilot y OpenCode leen AGENTS.md como contexto del proyecto)"
 echo "  */agents/local, */skills/local -> específicos de este proyecto"
 echo ""
 
