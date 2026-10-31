@@ -7,6 +7,13 @@
 set -e
 cd "$(dirname "$0")"
 
+# frontmatter + cuerpo, sin los marcadores adf:* (solo sirven en shared/ para
+# que check-adf.sh valide y resincronice los bloques comunes).
+combine() {
+  cat "$1" "$2" | sed -e '/^<!-- adf:modo-consultivo:start -->$/d' \
+                      -e '/^<!-- adf:modo-consultivo:end -->$/d'
+}
+
 # Claude, Gemini y OpenCode: subagentes, un archivo .md por rol
 for provider in claude gemini opencode; do
   mkdir -p "dist/$provider"
@@ -17,7 +24,7 @@ for provider in claude gemini opencode; do
       echo "Aviso: falta frontmatter/$provider/$name, se omite."
       continue
     fi
-    cat "$fm" "$body" > "dist/$provider/$name"
+    combine "$fm" "$body" > "dist/$provider/$name"
   done
 done
 
@@ -31,7 +38,7 @@ for body in shared/*.md; do
     continue
   fi
   mkdir -p "dist/codex/$name"
-  cat "$fm" "shared/$name.md" > "dist/codex/$name/SKILL.md"
+  combine "$fm" "shared/$name.md" > "dist/codex/$name/SKILL.md"
 done
 
 # Copilot: custom agents, la extensión .agent.md es requisito del formato
@@ -43,7 +50,7 @@ for body in shared/*.md; do
     echo "Aviso: falta frontmatter/copilot/$name.md, se omite."
     continue
   fi
-  cat "$fm" "$body" > "dist/copilot/$name.agent.md"
+  combine "$fm" "$body" > "dist/copilot/$name.agent.md"
 done
 
 echo "Generado: agents/dist/{claude,gemini,opencode}/*.md, agents/dist/codex/*/SKILL.md, agents/dist/copilot/*.agent.md"

@@ -52,6 +52,7 @@ monorepo — ver "Topologías de proyecto soportadas" más abajo.
 ```
 agents/
 ├── shared/                        # cuerpo del prompt por rol, provider-agnostic
+│   └── _blocks/modo-consultivo.md # bloque común a los 6 roles (fuente única, ver check-adf.sh)
 ├── frontmatter/{claude,gemini,codex,copilot,opencode}/  # config específica por CLI
 ├── dist/{claude,gemini,codex,copilot,opencode}/    # generado por build.sh — esto es lo que se symlinkea
 └── build.sh
@@ -75,7 +76,8 @@ setup/
 ├── bootstrap.sh                   # arma un proyecto NUEVO de punta a punta (recomendado)
 ├── link.sh                        # instala/actualiza symlinks en un proyecto ya clonado (auto-verificado)
 ├── update.sh                      # trae la última versión del toolkit (git pull adentro)
-└── check-global-tools.sh          # verifica graphify/ui-ux-pro-max globales (+ toolchain Flutter si hay pubspec.yaml)
+├── check-global-tools.sh          # verifica graphify/ui-ux-pro-max globales (+ toolchain Flutter si hay pubspec.yaml)
+└── check-adf.sh                   # lint del toolkit (skills, roles, dist/, router, standards, datos de negocio)
 .gitattributes                     # fuerza LF en .sh (evita error CRLF en Windows)
 ```
 
@@ -386,6 +388,27 @@ del padre, aunque esté físicamente dentro de esa carpeta. El
 `agent_orchestrator` delega internamente en los Specialists, que leen/escriben
 archivos dentro de cada repo hijo sin necesitar una sesión propia ahí — no
 hace falta (ni conviene) hacer `cd backend-x` para trabajar en esa capa.
+
+## Lint del toolkit (`check-adf.sh`)
+
+```bash
+bash tools/dev-toolkit/setup/check-adf.sh --project . --deny-file local/adf-deny.txt
+```
+Imprime OK / WARN / FAIL / SKIP por check y sale con código 1 si alguno falla.
+Revisa el frontmatter y el tamaño de las skills, que el bloque de Modo
+Consultivo sea idéntico en los 6 roles, que cada rol tenga frontmatter en los
+5 proveedores, que `agents/dist/` coincida con lo que genera `build.sh`, que
+`agent_orchestrator` mencione cada rol y skill y, con `--project`, las skills
+locales (una vez por skill real; WARN si un `.<cli>/skills/local/<x>` es una
+copia en vez de symlink) y los `standards/`. Sin `--fix` es de solo lectura;
+`--fix` resincroniza el bloque de Modo Consultivo (se edita solo en
+`agents/shared/_blocks/modo-consultivo.md`) y regenera `agents/dist/`.
+
+**Datos de negocio**: `--deny-file` recibe un archivo con un término por
+línea (vacías y `#` se ignoran) que no puede aparecer en nada versionado del
+toolkit. Ese archivo vive en cada proyecto, nunca acá: por ejemplo
+`local/adf-deny.txt`, agregado al `.gitignore` del proyecto o mantenido solo
+en tu máquina. Sin el flag, el check queda en SKIP.
 
 ## Troubleshooting
 

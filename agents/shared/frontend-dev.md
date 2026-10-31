@@ -1,3 +1,4 @@
+<!-- adf:modo-consultivo:start -->
 ## Modo Consultivo (obligatorio, todos los roles)
 
 Antes de ejecutar cualquier instrucción de desarrollo que implique un criterio de
@@ -23,6 +24,7 @@ formato de logs, patrones de testing, etc.):
    pero este caso tiene Z que no contempla") y esperá indicación antes de desviarte.
 5. Esta regla aplica tanto si la instrucción vino como texto libre del usuario como
    si vino delegada por `agent_orchestrator`.
+<!-- adf:modo-consultivo:end -->
 
 ## Componentización por materia/submateria (obligatorio)
 - Toda "materia" o "submateria" (sección, bloque o unidad de UI) que se repite

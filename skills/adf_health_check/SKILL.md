@@ -39,7 +39,13 @@ lectura.
    `pubspec.yaml`): correr `flutter doctor -v` y reportar Flutter, Android
    toolchain y — solo en macOS — Xcode y CocoaPods. En Windows/Linux reportar
    iOS como ⚠️ "requiere Mac o CI macOS": no es una falla del setup.
-9. **Versión del toolkit**: reportar `git -C tools/dev-toolkit rev-parse --short HEAD`
+9. **Lint del toolkit**: correr
+   `bash tools/dev-toolkit/setup/check-adf.sh --project .` (agregando
+   `--deny-file local/adf-deny.txt` si ese archivo existe) y volcar su
+   resumen en el reporte: cada check FAIL es ❌, WARN y SKIP son ⚠️. No
+   repetir a mano lo que el script ya verifica; si sale con código distinto
+   de 0, el detalle de cada FAIL dice qué corregir (y si `--fix` lo resuelve).
+10. **Versión del toolkit**: reportar `git -C tools/dev-toolkit rev-parse --short HEAD`
    y la fecha del último commit, para que el usuario sepa si está desactualizado
    sin tener que revisarlo a mano.
 
