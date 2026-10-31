@@ -48,3 +48,40 @@ en una máquina nueva), no se copian.
 |---|---|---|---|---|
 | graphify | B (instalador propio) | Mapea el código a un grafo consultable; ahorra tokens vs. leer archivos completos | github.com/Graphify-Labs/graphify | `uv tool install graphifyy && graphify install && graphify gemini install` |
 | ui-ux-pro-max | B (instalador propio) | Genera sistemas de diseño (colores, tipografía, patrones) según el tipo de producto; se auto-activa en pedidos de UI/UX | github.com/nextlevelbuilder/ui-ux-pro-max-skill | `npm install -g ui-ux-pro-max-cli && uipro init --ai claude --global && uipro init --ai gemini --global` |
+
+## Evaluados, no adoptados como plataforma
+
+Frameworks o colecciones revisados de los que se tomaron ideas puntuales,
+implementadas de forma nativa en el ADF, sin instalarlos.
+
+### QDD Framework — Descartado como plataforma
+
+Fuente: github.com/trdago/qdd-framework. Reevaluado 2026-10-31 (v2.8.0-rc.2).
+
+- **Motivos**: choca con `agent_orchestrator` como router; ejecuta agentes
+  con `--dangerously-skip-permissions`; descarga reglas sin versión fija; no
+  cubre Gemini ni Codex.
+- **Ideas tomadas** (implementación propia):
+  1. Modo Consultivo, bloque obligatorio en los roles (a5f772a).
+  2. `standards/_TEMPLATE.md` (a5f772a).
+  3. Certificación liviana en `.adf/certifications/` (diseñada en a5f772a,
+     integrada en 9dbc64c).
+  4. Estado por frente (`.adf/ESTADO.md`).
+  5. Comandos para el humano (`## Para ti`: push, tags, merges, deploys).
+  6. Temporales en `./tmp/`.
+  7. Fichas de módulo (`.adf/modules/`, solo el humano aprueba).
+  8. Findings con prueba de regresión (`.adf/findings/`).
+  9. Gate veraz con adopción gradual (`adopcion: gradual|estricta`).
+- **Descartadas a propósito**: score 0-100, blueprints, dashboard,
+  keep-alive, equipo resolutor, certificaciones ISO de IA.
+
+### expo/skills — Pendiente, condicionado a stack
+
+Fuente: github.com/expo/skills. Solo si `mobile-dev` pasa de Flutter a
+Expo/React Native.
+
+- **Ideas tomadas** (implementación propia): router con mapa por objetivo,
+  descriptions con "No usar para…", "Versión antes de opinar", lint de skills
+  con bloque canónico.
+- **Si se instala**: solo las skills de framework, sin el bloque de feedback
+  (envía contexto a Expo) ni el MCP remoto sin evaluar.

@@ -7,7 +7,7 @@
 #   bash setup/check-adf.sh [--fix] [--project <ruta>] [--deny-file <ruta>]
 #
 #   --fix              corrige lo corregible (bloque de Modo Consultivo, dist/)
-#   --project <ruta>   revisa además skills locales y standards/ de ese proyecto
+#   --project <ruta>   revisa además skills locales, standards/ y .adf/ (fichas, findings, ESTADO.md)
 #   --deny-file <ruta> términos prohibidos (uno por línea, # = comentario) que
 #                      no pueden aparecer en lo versionado del toolkit. Nunca
 #                      vive dentro del toolkit (ej. <proyecto>/local/adf-deny.txt)
@@ -111,6 +111,57 @@ fm_field() {
     }
     END { if (ml) print v }
   ' "$1"
+}
+
+# fm_field sin el comentario final (`valor   # comentario`).
+fm_value() { fm_field "$1" "$2" | sed 's/[[:space:]]#.*$//; s/[[:space:]]*$//'; }
+
+# 0 si el frontmatter abre en la línea 1 y cierra con otro `---`.
+has_frontmatter() {
+  awk '{ sub(/\r$/, "") } NR == 1 && $0 != "---" { exit 1 } NR > 1 && $0 == "---" { ok = 1; exit } END { exit !ok }' "$1"
+}
+
+# 0 si el frontmatter tiene la clave (aunque su valor esté vacío).
+fm_has() {
+  awk -v key="$2" '{ sub(/\r$/, "") } NR == 1 { next } /^---$/ { exit } index($0, key ":") == 1 { f = 1; exit } END { exit !f }' "$1"
+}
+
+# Ítems de una lista del frontmatter, uno por línea: `key:` + `  - item`
+# o `key: [a, b]`.
+fm_list() {
+  awk -v key="$2" -v q="'" '
+    function clean(s) { sub(/[ \t]+#.*$/, "", s); gsub("^[ \t\"" q "]+|[ \t\"" q "]+$", "", s); return s }
+    { sub(/\r$/, "") }
+    NR == 1 { if ($0 != "---") exit; next }
+    /^---$/ { exit }
+    inl && /^[ \t]*- / { s = $0; sub(/^[ \t]*- /, "", s); s = clean(s); if (s != "") print s; next }
+    inl && /^[^ \t]/ { inl = 0 }
+    index($0, key ":") == 1 {
+      v = clean(substr($0, length(key) + 2))
+      if (v == "") { inl = 1; next }
+      if (v ~ /^\[/) {
+        gsub(/[][]/, "", v); n = split(v, a, ",")
+        for (i = 1; i <= n; i++) { x = clean(a[i]); if (x != "") print x }
+      }
+    }
+  ' "$1"
+}
+
+# 0 si la ruta (relativa a $1; puede tener comodines) existe.
+path_exists() {
+  case "$2" in
+    *'*'*|*'?'*) for m in "$1"/$2; do [ -e "$m" ] && return 0; done; return 1 ;;
+    *) [ -e "$1/$2" ] ;;
+  esac
+}
+
+# Carpetas .adf/ del proyecto: la de la raíz y la de cada repo hijo de primer
+# nivel (topología B). Imprime "<raíz del repo>" por línea.
+adf_repos() {
+  [ -d "$PROJECT/.adf" ] && echo "$PROJECT"
+  for d in "$PROJECT"/*/; do
+    [ -e "$d.git" ] && [ -d "$d.adf" ] && echo "${d%/}"
+  done
 }
 
 # Líneas del cuerpo (después del frontmatter; si no hay frontmatter, todo).
@@ -404,6 +455,115 @@ else
       || warn "$child/: repo hijo no ignorado por el .gitignore de la raíz (ver templates/root-tracking.gitignore.template)"
   done
   [ "$children" -gt 0 ] || note "sin repos hijos en el primer nivel (topología A/C, nada que revisar)"
+fi
+end_check
+
+# ---------- 10. Fichas de módulo ----------
+begin_check "10. Fichas de módulo (.adf/modules/*.md: frontmatter, estado, rutas)"
+if [ -z "$PROJECT" ]; then
+  skip "solo con --project"
+else
+  found=0
+  if [ ! -e "$PROJECT/.git" ] && [ -d "$PROJECT/.adf/modules" ]; then
+    warn ".adf/modules/ en la raíz sin git: en topología B las fichas van en <repo-hijo>/.adf/modules/"
+  fi
+  for repo in $(adf_repos); do
+    for f in "$repo"/.adf/modules/*.md; do
+      [ -f "$f" ] || continue
+      found=1
+      where=$(rel "$f")
+      if ! has_frontmatter "$f"; then
+        fail "$where: sin frontmatter válido (--- ... ---)"
+        continue
+      fi
+      for k in id estado rutas actualizada; do
+        fm_has "$f" "$k" || fail "$where: falta '$k' en el frontmatter"
+      done
+      estado=$(fm_value "$f" estado)
+      case "$estado" in
+        borrador|aprobada) ;;
+        *) fail "$where: estado '$estado' inválido (borrador | aprobada)" ;;
+      esac
+      id=$(fm_value "$f" id)
+      [ -z "$id" ] || [ "$id" = "$(basename "$f" .md)" ] \
+        || warn "$where: id '$id' distinto del nombre del archivo"
+      rutas=$(fm_list "$f" rutas)
+      [ -n "$rutas" ] || fail "$where: 'rutas' sin ninguna ruta"
+      for r in $rutas; do
+        path_exists "$repo" "$r" || warn "$where: la ruta '$r' no existe (ficha desfasada)"
+      done
+    done
+  done
+  [ "$found" -eq 1 ] || note "sin fichas de módulo (nada que revisar)"
+fi
+end_check
+
+# ---------- 11. Findings ----------
+begin_check "11. Findings (.adf/findings/*.md: campos obligatorios, prueba de regresión)"
+if [ -z "$PROJECT" ]; then
+  skip "solo con --project"
+else
+  found=0
+  if [ ! -e "$PROJECT/.git" ] && [ -d "$PROJECT/.adf/findings" ]; then
+    warn ".adf/findings/ en la raíz sin git: en topología B los findings van en <repo-hijo>/.adf/findings/"
+  fi
+  for repo in $(adf_repos); do
+    for f in "$repo"/.adf/findings/*.md; do
+      [ -f "$f" ] || continue
+      found=1
+      where=$(rel "$f")
+      if ! has_frontmatter "$f"; then
+        fail "$where: sin frontmatter válido (--- ... ---)"
+        continue
+      fi
+      for k in id task_id prueba_regresion candidato_standard; do
+        [ -n "$(fm_value "$f" "$k")" ] || fail "$where: falta '$k' en el frontmatter"
+      done
+      id=$(fm_value "$f" id)
+      if [ -n "$id" ] && ! printf '%s' "$id" | grep -qx 'F-[0-9]\{8\}-[0-9]\{6\}'; then
+        fail "$where: id '$id' no sigue el formato F-AAAAMMDD-HHMMSS"
+      fi
+      cand=$(fm_value "$f" candidato_standard)
+      case "$cand" in si|no|'') ;; *) fail "$where: candidato_standard '$cand' inválido (si | no)" ;; esac
+      tr -d '\r' < "$f" > "$TMPD/fnd"
+      for h in "## Síntoma" "## Causa raíz" "## Corrección"; do
+        grep -qxF "$h" "$TMPD/fnd" || fail "$where: falta la sección '$h'"
+      done
+      test_path=$(fm_value "$f" prueba_regresion)
+      if [ -n "$test_path" ] && [ ! -e "$repo/$test_path" ]; then
+        fail "$where: la prueba de regresión '$test_path' no existe"
+      fi
+    done
+  done
+  [ "$found" -eq 1 ] || note "sin findings (nada que revisar)"
+fi
+end_check
+
+# ---------- 12. ESTADO.md ----------
+begin_check "12. ESTADO.md (existe; ✅ solo con task_id de evidencia)"
+if [ -z "$PROJECT" ]; then
+  skip "solo con --project"
+else
+  estado_md=""
+  for c in "$PROJECT/.adf/ESTADO.md" "$PROJECT/ESTADO.md"; do
+    [ -f "$c" ] && { estado_md="$c"; break; }
+  done
+  if [ -z "$estado_md" ]; then
+    warn "no existe .adf/ESTADO.md (se crea con link.sh desde templates/ESTADO.md.template)"
+  else
+    # Filas de tabla con ✅ cuya última celda (Evidencia) está vacía o en "—"/"-".
+    sin_id=$(awk '
+      { sub(/\r$/, "") }
+      /^\|/ && index($0, "✅") {
+        line = $0; sub(/^\|/, "", line); sub(/\|[ \t]*$/, "", line)
+        n = split(line, c, "|"); ev = c[n]; gsub(/^[ \t]+|[ \t]+$/, "", ev)
+        if (ev == "" || ev == "—" || ev == "-") print NR ": " $0
+      }
+    ' "$estado_md")
+    for l in $sin_id; do
+      warn "$(rel "$estado_md"):$(printf '%s' "$l" | cut -c1-120) — ✅ sin task_id"
+    done
+  fi
 fi
 end_check
 

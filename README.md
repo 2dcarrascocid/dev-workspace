@@ -127,6 +127,23 @@ nunca código, secretos ni CI. Los repos hijos quedan fuera por lista blanca.
 2. `git add -A && git status`: deben aparecer solo `.gitignore`, `PROJECT.md`, `.adf/ESTADO.md` y `skills/local/`.
 3. Commit, remoto privado y push. Verificá con `bash tools/dev-toolkit/setup/check-adf.sh --project .`.
 
+## Estado, fichas y findings
+
+| Artefacto | Qué es | A/C (repo en la raíz) | B (raíz sin git) |
+|---|---|---|---|
+| `ESTADO.md` | Frentes de trabajo (✅ solo con task_id) + `## Para ti`: comandos que solo corre el humano | `.adf/ESTADO.md` | `.adf/ESTADO.md` de la raíz (local; ver "B con raíz versionada") |
+| Fichas de módulo | Objetivo, invariantes y cómo se prueba cada zona (`borrador` / `aprobada`) | `.adf/modules/<id>.md` | `<repo-hijo>/.adf/modules/<id>.md` |
+| Findings | Bug confirmado: síntoma, causa raíz, corrección, prueba de regresión | `.adf/findings/<id>.md` | `<repo-hijo>/.adf/findings/<id>.md` |
+
+- Plantillas en `templates/` (`ESTADO`, `MODULE`, `FINDING`). `link.sh` crea
+  `ESTADO.md` si falta; fichas y findings los escribe `agent_orchestrator`.
+- Solo el humano aprueba fichas. Las fichas aprobadas son criterio de Modo
+  Consultivo, igual que `standards/`; los borradores no.
+- Los agentes nunca hacen push, tags, merges ni deploys: los anotan en
+  `## Para ti`. Los temporales van en `./tmp/` (ignorado).
+- `check-adf.sh --project` valida fichas (frontmatter, estado, rutas que
+  existen), findings (campos y prueba de regresión) y ✅ sin task_id.
+
 ## Uso en un proyecto nuevo (recomendado — un solo comando)
 
 Guardá `bootstrap.sh` en un lugar fijo de tu máquina (no depende de estar
@@ -412,7 +429,9 @@ Consultivo sea idéntico en los 6 roles, que cada rol tenga frontmatter en los
 5 proveedores, que `agents/dist/` coincida con lo que genera `build.sh`, que
 `agent_orchestrator` mencione cada rol y skill y, con `--project`, las skills
 locales (una vez por skill real; WARN si un `.<cli>/skills/local/<x>` es una
-copia en vez de symlink) y los `standards/`. Sin `--fix` es de solo lectura;
+copia en vez de symlink), los `standards/`, que los repos hijos estén
+ignorados si la raíz está versionada, y lo de `.adf/` (fichas, findings y
+`ESTADO.md`; ver "Estado, fichas y findings"). Sin `--fix` es de solo lectura;
 `--fix` resincroniza el bloque de Modo Consultivo (se edita solo en
 `agents/shared/_blocks/modo-consultivo.md`) y regenera `agents/dist/`.
 
