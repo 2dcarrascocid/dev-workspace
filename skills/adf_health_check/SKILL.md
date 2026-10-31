@@ -1,6 +1,6 @@
 ---
 name: adf_health_check
-description: Corre una verificación rápida de que la arquitectura ADF está funcionando correctamente (agentes detectados, skills detectadas, evidencia registrándose). Úsalo cuando el usuario pida un chequeo de salud del setup, un diagnóstico, o una "prueba de blancura"/smoke test del entorno agentic.
+description: Verifica de punta a punta que el setup ADF del proyecto funcione (agentes y skills detectados, PROJECT.md completo, evidencia, herramientas globales y el lint check-adf.sh) sin modificar nada. Úsalo cuando el usuario pregunte "¿está todo instalado?", "¿funciona el setup?", pida un diagnóstico o una prueba de blancura/smoke test. No usar para tareas de desarrollo (eso es agent_orchestrator) ni para escanear secretos en detalle (eso es secrets_scanner).
 ---
 
 # ADF Health Check

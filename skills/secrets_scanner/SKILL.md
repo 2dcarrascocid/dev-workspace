@@ -1,6 +1,6 @@
 ---
 name: secrets_scanner
-description: Detecta si archivos de ejemplo/template de entorno (ejm.env, .env.example, .env.sample, .env.template) contienen valores reales en vez de placeholders, y si algún archivo con secretos quedó commiteado al historial de git. Úsalo antes de un commit, cuando el usuario pida escanear secretos, o cuando el health check detecte un archivo de ejemplo sospechoso.
+description: Detecta valores reales (no placeholders) en archivos de ejemplo de entorno (ejm.env, .env.example, .env.sample, .env.template) y archivos con secretos commiteados al historial de git. Úsalo antes de un commit, o cuando el usuario pida "revisá si hay credenciales", "¿se me filtró alguna clave?" o el health check detecte un archivo de ejemplo sospechoso. No usar para revisar la seguridad del código en general (eso es security-reviewer).
 ---
 
 # Secrets Scanner

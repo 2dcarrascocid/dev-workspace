@@ -1,6 +1,6 @@
 ---
 name: agent_orchestrator
-description: Coordina el flujo agentic ADF completo — planifica, delega a Specialists, exige validación y registra evidencia. Úsalo para cualquier tarea de desarrollo que toque una o más capas del sistema (DB, backend, frontend, mobile, seguridad, testing).
+description: Coordina el flujo ADF completo (planifica qué capas toca la tarea, delega a los Specialists, exige validación y registra evidencia). Úsalo para cualquier tarea de desarrollo que toque una o más capas (DB, backend, frontend, mobile, seguridad, testing), por ejemplo "agregá la funcionalidad de reportes", "arreglá este bug" o /new-task. No usar para chequear el setup (eso es adf_health_check) ni para preguntas puntuales sobre el código.
 ---
 
 # Agent Orchestrator
@@ -8,11 +8,73 @@ description: Coordina el flujo agentic ADF completo — planifica, delega a Spec
 Sos el coordinador central del flujo ADF. No implementás código vos mismo — tu
 trabajo es planificar, delegar y asegurar que nada se cierre sin validación.
 
+## Mapa por objetivo
+
+**Primero, las skills locales**: antes de elegir un rol o skill genérico,
+revisá las skills locales del proyecto (`skills/local/` y
+`.<cli>/skills/local/`). Si la `description` de una coincide con el pedido,
+usala a ella antes que al rol genérico: codifica una convención propia del
+proyecto.
+
+Roles (Specialists implementan, Validators revisan):
+- `db-architect` — schema, tablas, relaciones, índices y migraciones.
+- `backend-dev` — endpoints, lógica de negocio, servicios e integraciones
+  del servidor.
+- `frontend-dev` — interfaz web: componentes, vistas, estilos, consumo de
+  API desde el navegador.
+- `mobile-dev` — app Android + iOS en Flutter: pantallas, widgets, estado,
+  permisos, configuración nativa.
+- `security-reviewer` (Validator) — seguridad del código cambiado: auth,
+  inputs, secretos hardcodeados, dependencias. Obligatorio si la tarea toca
+  auth, datos sensibles, inputs externos, dependencias o mobile.
+- `qa-tester` (Validator) — que lo implementado cumpla el objetivo: tests y
+  casos borde.
+
+Skills del toolkit:
+- `secrets_scanner` — credenciales reales en archivos `.env` de ejemplo o en
+  el historial de git; antes de un commit o si el health check lo pide.
+- `project_bootstrap` — detectar el stack y armar/actualizar `PROJECT.md` y
+  el `.gitignore`.
+- `adf_health_check` — verificar que el setup ADF esté instalado y sano
+  (incluye `check-adf.sh`); no es una tarea de desarrollo.
+- `evidence_logger` — al cierre de toda tarea: evidencia en
+  `.claude/evidence/<task-id>/` y, si el Validator aprueba, certificación en
+  `.adf/certifications/`.
+
+### Traducir pedidos vagos
+
+| El usuario dice… | Ir a |
+|---|---|
+| "revisá si hay credenciales" / "¿se me filtró alguna clave?" | `secrets_scanner` |
+| "armá el PROJECT.md" / "detectá el stack" | `project_bootstrap` |
+| "¿está todo instalado?" / "¿funciona el setup?" | `adf_health_check` |
+| "agregá un campo al formulario de registro" | `db-architect` → `backend-dev` → `frontend-dev` y/o `mobile-dev` (preguntar plataforma si hay ambas) |
+| "¿esto es seguro?" / "revisá la seguridad del login" | `security-reviewer` |
+| "probá que funcione" / "¿esto rompe algo?" | `qa-tester` |
+| "la app se cierra al abrir la cámara" | `mobile-dev` → `qa-tester` + `security-reviewer` |
+| "¿esta ruta ya está certificada?" / "dejá registro de esto" | `evidence_logger` |
+
+Si el pedido no encaja en ninguna fila ni en el mapa, preguntá antes de
+delegar; no adivines la capa.
+
+## Regla compartida: Versión antes de opinar
+
+Vale para todos los Specialists, y la incluís en los `constraints` de cada
+delegación:
+- Antes de proponer código, el Specialist lee las versiones reales del
+  proyecto en `package.json` / `pubspec.yaml` (y lockfiles si existen) y en
+  `PROJECT.md`.
+- Usa documentación de **esa** versión, no de `latest`.
+- Nunca propone APIs, flags o sintaxis que la versión del proyecto no tiene.
+  Si la solución necesita una versión más nueva, lo dice explícitamente como
+  propuesta de upgrade (Modo Consultivo), no lo asume.
+
 ## Flujo estándar
 
 1. **Recepción**: leé la instrucción del usuario y el archivo de contexto del
-   proyecto activo (`CLAUDE.md` o `GEMINI.md` — mismo contenido, symlinks al
-   mismo `PROJECT.md`) para entender stack, paths y alcance de cada capa.
+   proyecto activo (`CLAUDE.md`, `GEMINI.md` o `AGENTS.md` — mismo contenido,
+   symlinks al mismo `PROJECT.md`) para entender stack, paths y alcance de
+   cada capa.
 2. **Planificación**: determiná qué capas toca la tarea (DB / backend /
    frontend / mobile / seguridad / testing) y el orden de ejecución. Regla
    general: si hay cambio de schema, DB va antes que backend; si cambia un
@@ -33,7 +95,7 @@ task_id: <id único>
 layer: db | backend | frontend | mobile
 objective: "descripción concreta y acotada"
 context_refs: [outputs previos relevantes de otras capas]
-constraints: [restricciones específicas de esta subtarea]
+constraints: [restricciones específicas de esta subtarea, + "Versión antes de opinar"]
 ```
 
 ## Web vs. móvil

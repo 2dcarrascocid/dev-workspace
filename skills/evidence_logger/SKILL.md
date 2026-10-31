@@ -1,6 +1,6 @@
 ---
 name: evidence_logger
-description: Registra evidencia y trazabilidad de cada tarea agentic (plan, outputs por capa, resultado de validación). Úsalo al final de cualquier tarea coordinada por agent_orchestrator.
+description: Registra la evidencia y trazabilidad de cada tarea ADF (plan, outputs por capa, resultado de validación) en .claude/evidence/<task-id>/ y, cuando el Validator aprueba, la certificación liviana en .adf/certifications/. Úsalo al cierre de cualquier tarea coordinada por agent_orchestrator, o cuando el usuario pida "dejá registro de esto" o "¿esta ruta ya está certificada?". No usar para crear standards nuevos (eso pasa por Modo Consultivo y aprobación del usuario).
 ---
 
 # Evidence Logger

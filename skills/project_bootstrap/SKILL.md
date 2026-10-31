@@ -1,6 +1,6 @@
 ---
 name: project_bootstrap
-description: Detecta el stack de un proyecto (lenguaje, framework, motor de DB, gestor de paquetes) leyendo sus archivos de manifiesto y propone el contenido para PROJECT.md. Úsalo cuando el usuario pida iniciar un proyecto nuevo, detectar el stack automáticamente, o completar/actualizar PROJECT.md sin llenarlo a mano.
+description: Detecta el stack de un proyecto (lenguaje, framework, motor de DB, gestor de paquetes) leyendo sus manifiestos, propone el contenido de PROJECT.md y completa el .gitignore. Úsalo cuando el usuario pida "armá el PROJECT.md", "detectá el stack", "iniciá este proyecto" o actualizar PROJECT.md sin llenarlo a mano. No usar para verificar que el setup esté instalado (eso es adf_health_check).
 ---
 
 # Project Bootstrap

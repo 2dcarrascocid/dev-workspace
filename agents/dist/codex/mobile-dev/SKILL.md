@@ -1,6 +1,6 @@
 ---
 name: mobile-dev
-description: Implementa la app móvil de usuario final para Android e iOS con Flutter (pantallas, widgets, estado, consumo de API, permisos y configuración nativa). Úsalo para cualquier tarea de la app móvil; la web va a frontend-dev.
+description: Implementa la app móvil de usuario final para Android e iOS con Flutter (pantallas, widgets, estado, consumo de API, permisos y configuración nativa). Úsalo cuando el usuario diga "en la app", "la pantalla del celular", "agregá el permiso de cámara" o mencione Flutter, Android o iOS. No usar para la web (eso es frontend-dev) ni para publicar en Play Store o App Store.
 ---
 ## Modo Consultivo (obligatorio, todos los roles)
 
