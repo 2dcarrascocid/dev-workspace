@@ -103,11 +103,11 @@ una decisión válida por proyecto — no el default.
 
 ## Topologías de proyecto soportadas
 
-| Escenario | Ejemplo real | `.git` en la raíz del proyecto |
+| Escenario | Ejemplo | `.git` en la raíz del proyecto |
 |---|---|---|
 | **A.** Repo único | proyecto típico chico | sí |
-| **B.** Carpeta padre + repos hijos independientes | rendicion (core + web + web-servel) | no — cada repo hijo tiene el suyo |
-| **C.** Monorepo (repos hijos integrados) | superliga | sí |
+| **B.** Carpeta padre + repos hijos independientes | app-core + app-web + app-admin | no — cada repo hijo tiene el suyo |
+| **C.** Monorepo (repos hijos integrados) | mi-monorepo | sí |
 
 El setup de `link.sh` es idéntico en los tres casos. Lo único que cambia es
 el `.graphifyignore` para la base de conocimiento (ver más abajo) y, en el
