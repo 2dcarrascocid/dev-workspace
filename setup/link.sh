@@ -85,6 +85,36 @@ for f in "$TOOLKIT_DIR"/commands/*.md; do
   ln -sfn "../../$f" ".opencode/commands/$(basename "$f")"
 done
 
+# ---------- Skills locales del proyecto (skills/local/<x>/) ----------
+# Solo Claude, Gemini y Codex: Copilot y OpenCode quedan pendientes hasta
+# verificar que detectan skills a 2 niveles. Nunca pisa lo existente ni borra
+# symlinks colgantes: solo avisa (check-adf.sh --project los marca).
+LOCAL_WARNINGS=()
+for c in .claude .gemini .codex; do
+  for d in skills/local/*/; do
+    [ -f "${d}SKILL.md" ] || continue
+    skill=$(basename "$d")
+    dest="$c/skills/local/$skill"
+    target="../../../skills/local/$skill"
+    if [ -L "$dest" ]; then
+      [ "$(readlink "$dest")" = "$target" ] \
+        || LOCAL_WARNINGS+=("$dest: symlink a otro destino ($(readlink "$dest")), no se tocó")
+      continue
+    fi
+    if [ -e "$dest" ]; then
+      LOCAL_WARNINGS+=("$dest: ya existe como carpeta/archivo real, no se tocó")
+      continue
+    fi
+    ln -sfn "$target" "$dest"
+    verify_link "$dest"
+  done
+  for e in "$c"/skills/local/*; do
+    if [ -L "$e" ] && [ ! -e "$e" ]; then
+      LOCAL_WARNINGS+=("$e: symlink colgante (la skill ya no existe en la fuente), no se borró")
+    fi
+  done
+done
+
 # ---------- Contexto del proyecto (siempre, no solo en bootstrap) ----------
 if [ ! -f PROJECT.md ]; then
   cp "$TOOLKIT_DIR/templates/PROJECT.md.template" PROJECT.md
@@ -120,7 +150,16 @@ echo "  CLAUDE.md, GEMINI.md, AGENTS.md -> symlinks a PROJECT.md"
 echo "  .adf/ESTADO.md         -> estado por frente (lo mantiene agent_orchestrator)"
 echo "  (Copilot y OpenCode leen AGENTS.md como contexto del proyecto)"
 echo "  */agents/local, */skills/local -> específicos de este proyecto"
+echo "  .{claude,gemini,codex}/skills/local/<x> -> skills/local/<x> (fuente local)"
 echo ""
+
+if [ ${#LOCAL_WARNINGS[@]} -gt 0 ]; then
+  echo "⚠️  Skills locales sin enlazar o desfasadas (revisar a mano):"
+  for w in "${LOCAL_WARNINGS[@]}"; do
+    echo "     - $w"
+  done
+  echo ""
+fi
 
 if [ "$ESTADO_NUEVO" -eq 1 ] && ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "ℹ️  La raíz no es un repo git (topología B): .adf/ESTADO.md queda local"
