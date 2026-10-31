@@ -71,6 +71,7 @@ standards/
 └── _TEMPLATE.md                   # plantilla genérica para standards de proyecto (viven en local)
 templates/
 ├── PROJECT.md.template            # a copiar y completar en cada proyecto nuevo
+├── ESTADO.md.template             # estado por frente + "Para ti" (link.sh lo copia a .adf/)
 └── .gitignore.template            # base que project_bootstrap completa solo
 setup/
 ├── bootstrap.sh                   # arma un proyecto NUEVO de punta a punta (recomendado)

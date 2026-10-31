@@ -19,6 +19,9 @@ Thumbs.db
 .claude/evidence/
 .gemini/evidence/
 
+# --- scripts de un solo uso, logs y salidas temporales de los agentes ---
+tmp/
+
 # --- entornos / secretos ---
 .env
 .env.local

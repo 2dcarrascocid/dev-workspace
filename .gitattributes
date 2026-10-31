@@ -4,3 +4,4 @@
 # "$'\r': command not found".
 *.sh text eol=lf
 *.md text eol=lf
+*.template text eol=lf

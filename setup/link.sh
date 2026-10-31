@@ -93,6 +93,15 @@ ln -sf PROJECT.md CLAUDE.md
 ln -sf PROJECT.md GEMINI.md
 ln -sf PROJECT.md AGENTS.md
 
+# ---------- Estado por frente (.adf/ESTADO.md) ----------
+# Igual que PROJECT.md: se copia de la plantilla solo si no existe uno.
+ESTADO_NUEVO=0
+if [ ! -f .adf/ESTADO.md ] && [ ! -f ESTADO.md ]; then
+  mkdir -p .adf
+  cp "$TOOLKIT_DIR/templates/ESTADO.md.template" .adf/ESTADO.md
+  ESTADO_NUEVO=1
+fi
+
 echo "Listo. Estructura:"
 echo "  .claude/agents/base    -> agents/dist/claude/ (genérico, actualizable)"
 echo "  .claude/skills/base    -> skills/ (genérico, actualizable)"
@@ -108,9 +117,16 @@ echo "  .opencode/agents/*.md   -> agents/dist/opencode/ (subagentes OpenCode)"
 echo "  .opencode/skills/<skill> -> skills/<skill> (una por una)"
 echo "  .opencode/commands/*.md -> commands/*.md (/new-task en OpenCode)"
 echo "  CLAUDE.md, GEMINI.md, AGENTS.md -> symlinks a PROJECT.md"
+echo "  .adf/ESTADO.md         -> estado por frente (lo mantiene agent_orchestrator)"
 echo "  (Copilot y OpenCode leen AGENTS.md como contexto del proyecto)"
 echo "  */agents/local, */skills/local -> específicos de este proyecto"
 echo ""
+
+if [ "$ESTADO_NUEVO" -eq 1 ] && ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "ℹ️  La raíz no es un repo git (topología B): .adf/ESTADO.md queda local"
+  echo "   y no se sincroniza entre máquinas."
+  echo ""
+fi
 
 if [ ${#FAILED_LINKS[@]} -gt 0 ]; then
   echo "⚠️  ATENCIÓN: estos symlinks NO se crearon como symlinks reales"

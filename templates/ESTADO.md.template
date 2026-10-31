@@ -1,0 +1,28 @@
+# Estado del proyecto
+
+_Lo lee `agent_orchestrator` al iniciar cada sesión y lo actualiza antes de
+reportar el cierre de cualquier tarea. ✅ solo con task_id de evidencia
+(`.claude/evidence/<task-id>/`)._
+
+Actualizado: {{FECHA_ISO}}
+
+## Frentes de trabajo
+
+Estado: ✅ hecho con evidencia · ⏳ esperando · ❌ falla
+
+| Frente | Etapa | Estado | Espera a | Evidencia |
+|---|---|---|---|---|
+| {{FRENTE}} | {{ETAPA}} | ⏳ | {{QUIEN_O_QUE}} | — |
+
+## Para ti
+
+Comandos que solo ejecuta el humano: push, tags, merges, publicaciones y
+deploys. Los agentes los anotan acá, nunca los corren.
+
+| Comando | Motivo | Depende de |
+|---|---|---|
+| `{{COMANDO}}` | {{MOTIVO}} | {{DEPENDENCIA}} |
+
+## Notas
+
+- {{NOTA_BREVE_O_BORRAR}}

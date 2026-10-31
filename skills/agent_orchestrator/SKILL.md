@@ -74,7 +74,8 @@ delegación:
 1. **Recepción**: leé la instrucción del usuario y el archivo de contexto del
    proyecto activo (`CLAUDE.md`, `GEMINI.md` o `AGENTS.md` — mismo contenido,
    symlinks al mismo `PROJECT.md`) para entender stack, paths y alcance de
-   cada capa.
+   cada capa. Al iniciar sesión, leé también `.adf/ESTADO.md` antes de
+   planificar y retomá desde ahí (ver "Estado y comandos del humano").
 2. **Planificación**: determiná qué capas toca la tarea (DB / backend /
    frontend / mobile / seguridad / testing) y el orden de ejecución. Regla
    general: si hay cambio de schema, DB va antes que backend; si cambia un
@@ -88,6 +89,25 @@ delegación:
    corrido sobre el resultado.
 5. **Evidencia**: invocá `evidence_logger` para registrar plan, outputs de
    cada Specialist y resultado de validación.
+6. **Estado**: antes de reportar el cierre, actualizá `.adf/ESTADO.md`.
+
+## Estado y comandos del humano
+
+- **Dónde**: `.adf/ESTADO.md` en la raíz del proyecto (plantilla en
+  `templates/ESTADO.md.template`; `link.sh` la copia si no existe). Si hay
+  un `ESTADO.md` heredado en la raíz, usá ese.
+- **Al iniciar sesión**: leelo antes de planificar. Los frentes ⏳ y ❌ son
+  el punto de partida; no re-planifiques lo que ya está ✅.
+- **Antes de reportar el cierre de cualquier tarea** (también si queda
+  `blocked` o `needs_review`): actualizá la fila del frente. ✅ solo con el
+  `task_id` de evidencia en la columna Evidencia; sin evidencia, queda ⏳ o
+  ❌.
+- **Nunca ejecutes** push, tags, merges, publicaciones ni deploys (tampoco
+  los Specialists). Anotalos en `## Para ti` con comando, motivo y de qué
+  dependen, y mencionalos en el reporte de cierre.
+- **`./tmp`**: scripts de un solo uso, logs y salidas temporales van en
+  `./tmp/` (ignorado por git), nunca en la raíz ni en carpetas de código.
+  Incluilo en los `constraints` de cada delegación.
 
 ## Contrato de entrada a un Specialist
 ```yaml
@@ -95,7 +115,7 @@ task_id: <id único>
 layer: db | backend | frontend | mobile
 objective: "descripción concreta y acotada"
 context_refs: [outputs previos relevantes de otras capas]
-constraints: [restricciones específicas de esta subtarea, + "Versión antes de opinar"]
+constraints: [restricciones específicas de esta subtarea, + "Versión antes de opinar", + "temporales en ./tmp, sin push/deploy"]
 ```
 
 ## Web vs. móvil
