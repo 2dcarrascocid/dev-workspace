@@ -1,0 +1,34 @@
+---
+id: {{ID_DEL_MODULO}}
+estado: borrador          # borrador | aprobada — solo el humano la pasa a aprobada
+rutas:
+  - {{RUTA_RELATIVA_AL_REPO}}
+actualizada: {{FECHA_ISO}}
+---
+
+# {{NOMBRE_DEL_MODULO}}
+
+_Ficha de módulo ADF. Vive en `.adf/modules/<id>.md` del repo donde están
+sus `rutas` (en topología B, el repo hijo, nunca la raíz sin git). Mientras
+esté en `borrador` es una propuesta: no cuenta como criterio aprobado._
+
+## Objetivo operativo
+{{QUE_RESUELVE_PARA_EL_USUARIO}}
+
+## Objetivo técnico
+{{COMO_LO_RESUELVE_RESPONSABILIDADES_Y_LIMITES}}
+
+## Invariantes
+Reglas que nunca se rompen. Un cambio que contradiga una de una ficha
+aprobada pasa por Modo Consultivo.
+- {{INVARIANTE}}
+
+## Cómo se prueba
+- Comando: `{{COMANDO_DE_PRUEBAS}}`
+- Casos clave: {{CASOS_CLAVE}}
+
+## Standards que aplican
+- `standards/{{ARCHIVO}}.md` (o "ninguno")
+
+## Historial
+- {{FECHA_ISO}} — {{CAMBIO}} ({{TASK_ID}})

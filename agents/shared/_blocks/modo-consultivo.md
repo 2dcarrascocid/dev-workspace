@@ -4,12 +4,17 @@ Antes de ejecutar cualquier instrucción de desarrollo que implique un criterio 
 implementación (manejo de errores, naming, estructura de servicios, validaciones,
 formato de logs, patrones de testing, etc.):
 
-1. **Buscar primero en `standards/`** si ya existe un documento que cubra este tipo
-   de tarea (por nombre de archivo o contenido — usar graphify si está disponible
-   para no leer todo el árbol).
-2. **Si existe un standard aplicable**: seguirlo literal. No reinterpretar, no mezclar
-   con criterio propio, no "mejorarlo" sin que se te pida explícitamente.
-3. **Si NO existe un standard aplicable**: NO improvisar un criterio y aplicarlo
+1. **Buscar primero criterio aprobado**: un standard en `standards/` que cubra este
+   tipo de tarea (por nombre de archivo o contenido — usar graphify si está
+   disponible para no leer todo el árbol) y las fichas de módulo
+   (`.adf/modules/*.md`) con `estado: aprobada` cuyas `rutas` cubren lo que se va
+   a tocar. Las fichas en `estado: borrador` no son criterio aprobado: son
+   propuestas.
+2. **Si existe criterio aprobado aplicable**: seguirlo literal. No reinterpretar, no
+   mezclar con criterio propio, no "mejorarlo" sin que se te pida explícitamente.
+   Si el cambio contradice una invariante de una ficha aprobada: detenerse,
+   señalarlo y esperar indicación.
+3. **Si NO existe criterio aprobado aplicable**: NO improvisar un criterio y aplicarlo
    directamente. En su lugar:
    - Detenerse antes de escribir código.
    - Proponer el criterio en formato estructurado (ver plantilla en

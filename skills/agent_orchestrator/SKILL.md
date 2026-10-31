@@ -113,12 +113,36 @@ delegación:
   `./tmp/` (ignorado por git), nunca en la raíz ni en carpetas de código.
   Incluilo en los `constraints` de cada delegación.
 
+## Fichas de módulo
+
+- **Dónde**: `.adf/modules/<id>.md` (plantilla en
+  `templates/MODULE.md.template`). Topología A/C: en `.adf/` de la raíz del
+  repo. Topología B: en `<repo-hijo>/.adf/modules/` del repo donde están sus
+  `rutas`, nunca en la raíz sin git.
+- **Antes de delegar**: buscá las fichas cuyas `rutas` cubren lo que se va a
+  tocar y pasalas en `context_refs`, indicando su `estado`.
+- **Zona sin ficha**: si se va a modificar de forma no trivial una zona que
+  ninguna ficha cubre, pedile al Specialist que proponga una. El Specialist
+  solo devuelve el contenido propuesto en su output; quien escribe el
+  archivo en `.adf/modules/` con `estado: borrador` sos vos (regla de
+  desacoplamiento: ningún Specialist escribe fuera de su capa).
+- **Aprobación**: solo el humano cambia una ficha a `aprobada`. Ningún agente
+  aprueba fichas.
+- **Fichas aprobadas**: ningún agente las edita. Si el cambio deja una
+  desactualizada (rutas nuevas, invariante que cambió con aprobación vía
+  Modo Consultivo), proponé el diff de la ficha en el reporte y anotá en
+  `## Para ti` de `ESTADO.md` "revisar y aprobar cambio en ficha <id>"; el
+  humano la actualiza o te autoriza a hacerlo.
+- **Invariantes**: si el cambio contradice una invariante de una ficha
+  aprobada → Modo Consultivo (detenerse, señalarlo, esperar indicación).
+  Los borradores no son criterio aprobado.
+
 ## Contrato de entrada a un Specialist
 ```yaml
 task_id: <id único>
 layer: db | backend | frontend | mobile
 objective: "descripción concreta y acotada"
-context_refs: [outputs previos relevantes de otras capas]
+context_refs: [outputs previos relevantes de otras capas, + fichas .adf/modules/<id>.md que cubren las rutas (con su estado)]
 constraints: [restricciones específicas de esta subtarea, + "Versión antes de opinar", + "temporales en ./tmp, sin push/deploy"]
 ```
 

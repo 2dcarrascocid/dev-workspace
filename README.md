@@ -73,6 +73,7 @@ templates/
 ├── PROJECT.md.template            # a copiar y completar en cada proyecto nuevo
 ├── ESTADO.md.template             # estado por frente + "Para ti" (link.sh lo copia a .adf/)
 ├── root-tracking.gitignore.template # lista blanca para versionar la raíz en topología B
+├── MODULE.md.template             # ficha de módulo (.adf/modules/<id>.md)
 └── .gitignore.template            # base que project_bootstrap completa solo
 setup/
 ├── bootstrap.sh                   # arma un proyecto NUEVO de punta a punta (recomendado)
