@@ -85,3 +85,13 @@ Expo/React Native.
   con bloque canónico.
 - **Si se instala**: solo las skills de framework, sin el bloque de feedback
   (envía contexto a Expo) ni el MCP remoto sin evaluar.
+
+### Otras herramientas evaluadas
+
+| Herramienta | Estado | Notas |
+|---|---|---|
+| ruflo (ex claude-flow) — github.com/ruvnet/ruflo | Descartado | Redundante con `agent_orchestrator` / `evidence_logger`; la federación entre máquinas es un riesgo innecesario. |
+| LightRAG — github.com/HKUDS/LightRAG | No aplica | Infra de aplicación (RAG para usuarios finales), no dev-tooling. |
+| n8n-mcp — github.com/czlonkowski/n8n-mcp | Pendiente | Sólido y acotado; sin caso de uso hoy. |
+| Archify — github.com/tt-a1i/archify | Pendiente | Diagramas HTML interactivos, complementa graphify. Dudas: no confirma soporte de Gemini CLI; consulta updates cada ~72 h (desactivable con `ARCHIFY_UPDATE_CHECK_DISABLED=1`). Probar primero en un monorepo. |
+| Ollama + Continue | Instalado (solo Mac) | Modelos locales para tareas acotadas y código que no debe salir de la máquina; complementan, no reemplazan, a los CLIs de pago. La configuración vive fuera del toolkit. |
