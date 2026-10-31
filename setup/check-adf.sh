@@ -567,6 +567,19 @@ else
 fi
 end_check
 
+# ---------- 13. Symlinks reales en Windows ----------
+begin_check "13. Entorno: MSYS=winsymlinks:nativestrict (Git Bash / MSYS / Cygwin)"
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    case "${MSYS:-}" in
+      *winsymlinks:nativestrict*) ;;
+      *) fail "MSYS='${MSYS:-}': link.sh no corre así (ln -s copia en vez de enlazar). Agregar 'export MSYS=winsymlinks:nativestrict' a ~/.bashrc + Modo Desarrollador" ;;
+    esac
+    ;;
+  *) note "no es Git Bash / MSYS / Cygwin (no aplica)" ;;
+esac
+end_check
+
 echo ""
 echo "Resumen: $TOTAL_OK OK, $TOTAL_WARN WARN, $TOTAL_FAIL FAIL, $TOTAL_SKIP SKIP"
 [ "$TOTAL_FAIL" -eq 0 ]

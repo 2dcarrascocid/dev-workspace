@@ -10,6 +10,25 @@
 
 set -e
 
+# En Git Bash / MSYS / Cygwin, sin winsymlinks:nativestrict `ln -s` copia en
+# vez de enlazar y el script queda a medias: se corta antes de crear nada.
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    case "${MSYS:-}" in
+      *winsymlinks:nativestrict*) ;;
+      *)
+        echo "Error: falta MSYS=winsymlinks:nativestrict (sin eso ln -s copia en vez de enlazar)."
+        echo "  1. Agregá a ~/.bashrc:  export MSYS=winsymlinks:nativestrict"
+        echo "  2. Activá el Modo Desarrollador: Configuración → Privacidad y seguridad"
+        echo "     → Para desarrolladores → 'Modo de desarrollador'."
+        echo "  3. Cerrá y reabrí la terminal y volvé a correr este script."
+        echo "No se creó ni modificó nada."
+        exit 1
+        ;;
+    esac
+    ;;
+esac
+
 TOOLKIT_DIR="tools/dev-toolkit"
 FAILED_LINKS=()
 
