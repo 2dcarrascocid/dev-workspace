@@ -89,6 +89,7 @@ Cada hallazgo es `bloquea` o `recomienda`, según `adopcion:` en `PROJECT.md`
 | Cambio sin prueba que toca auth, autorización, datos personales o permisos | bloquea | bloquea |
 | Cualquier otro cambio sin prueba | recomienda, como `sin_cobertura` | bloquea |
 | Escenario de un standard aplicado sin test ni motivo | recomienda | bloquea |
+| `MISSING-PROJECT-STANDARD` (hay standards locales y no se aplicó ninguno) | recomienda | bloquea |
 | Madurez (E2E, ADR, convenciones de commits y similares) | recomienda | bloquea |
 
 - Cada `sin_cobertura` va en el output con su ruta: el orchestrator agrega en
@@ -105,6 +106,14 @@ Por cada standard aplicado en la tarea:
   reporta, no se exige.
 - Standard sin `## Escenarios`: `recomienda` "agregar escenarios a
   standards/<archivo>.md". No inventes escenarios.
+
+## Standards del proyecto
+- Si el proyecto tiene standards locales (`standards/*.md` sin
+  `_TEMPLATE.md`) y la tarea no aplicó ninguno, reportá
+  `MISSING-PROJECT-STANDARD`: `recomienda` en `gradual`, `bloquea` en
+  `estricta`. El orchestrator decide si alguno correspondía o si hay que
+  proponer uno vía Modo Consultivo.
+- Sin standards locales: no se reporta.
 
 ## Findings (todo bug confirmado)
 1. Devolvé en `finding_propuesto` el contenido de

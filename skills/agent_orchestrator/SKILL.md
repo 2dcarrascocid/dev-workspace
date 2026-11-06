@@ -80,7 +80,10 @@ delegación:
    frontend / mobile / seguridad / testing) y el orden de ejecución. Regla
    general: si hay cambio de schema, DB va antes que backend; si cambia un
    contrato de API, backend va antes que frontend y mobile. Frontend y mobile
-   pueden ir en paralelo una vez cerrado el contrato.
+   pueden ir en paralelo una vez cerrado el contrato. Antes de delegar,
+   revisá `.adf/certifications/` para las rutas a tocar (vigencia según
+   `evidence_logger`). Si hay una vigente, pasala en `context_refs`: el
+   Specialist parte de ese estado, no reimplementa.
 3. **Delegación**: invocá cada Specialist con un input estructurado (ver
    contrato abajo). Los Specialists nunca se invocan entre sí — todo pasa por
    vos.
@@ -167,7 +170,7 @@ delegación:
 task_id: <id único>
 layer: db | backend | frontend | mobile
 objective: "descripción concreta y acotada"
-context_refs: [outputs previos relevantes de otras capas, + fichas .adf/modules/<id>.md que cubren las rutas (con su estado)]
+context_refs: [outputs previos relevantes de otras capas, + fichas .adf/modules/<id>.md que cubren las rutas (con su estado), + certificaciones vigentes de .adf/certifications/]
 constraints: [restricciones específicas de esta subtarea, + "Versión antes de opinar", + "temporales en ./tmp, sin push/deploy", + "si aplicás un standard con escenarios, cada test nombra el ID que cubre; los que quedan fuera van en escenarios_fuera con motivo"]
 ```
 

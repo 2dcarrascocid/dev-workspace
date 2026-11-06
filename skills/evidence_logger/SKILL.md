@@ -66,7 +66,13 @@ tarea — nunca copiando el ejemplo literal:
 task_id: T-20260115-103000               # evidencia en .claude/evidence/<task-id>/
 path: src/api/pagos/servicios            # ruta real trabajada
 tags: [backend, error-handling]          # capas y temas de la tarea
-standard_applied: standards/<archivo>.md # o null si no aplicó ninguno
+standard_applied:                        # listas vacías si no aplicó ninguno
+  generic: [tools/dev-toolkit/standards/<archivo>.md]   # del toolkit
+  local: [standards/<archivo>.md]                       # del proyecto
+scenarios_covered: [ERR-01, ERR-02]      # IDs con test (qa-tester); [] si no hay escenarios
+scenarios_out: [{id: ERR-03, motivo: "..."}]
+findings: [F-20260115-101500]            # findings de la tarea, todos con status final
+hallazgos: [MISSING-PROJECT-STANDARD]    # recomienda que quedaron abiertos
 validated_by: security-reviewer          # Validator que aprobó
 files_touched:
   - src/api/pagos/servicios/pagos.service.js
@@ -79,8 +85,13 @@ notes: >
 ```
 
 Campos obligatorios: `task_id`, `path`, `tags`, `standard_applied`,
-`validated_by`, `files_touched`, `tests_passed`, `date`, `commit`.
-Opcionales: `agent`, `notes`.
+`scenarios_covered`, `findings`, `validated_by`, `files_touched`,
+`tests_passed`, `date`, `commit` (`scenarios_covered` y `findings` pueden
+ser `[]`). Opcionales: `scenarios_out`, `hallazgos`, `agent`, `notes`.
+
+- Una certificación anterior con `standard_applied` como texto se lee como
+  `local` o `generic` según la ruta, y se pasa al formato nuevo al
+  actualizarla.
 
 - `task_id` debe corresponder a una carpeta existente en
   `.claude/evidence/<task-id>/`.
@@ -109,7 +120,7 @@ comando falla (por ejemplo, el `commit` no existe en ese repo), también se
 trata como vencida.
 
 Solo con una certificación vigente:
-- Si tiene el mismo `standard_applied` y `tests_passed: true`, el agente
+- Si tiene el mismo `standard_applied` (ambas listas) y `tests_passed: true`, el agente
   parte de ese estado certificado en vez de rehacer el trabajo.
 - Si el standard cambió después de la `date` del registro, lo trata como
   vencido y lo señala, en vez de asumir que sigue vigente.
