@@ -89,11 +89,14 @@ Cada hallazgo es `bloquea` o `recomienda`, según `adopcion:` en `PROJECT.md`
 ## Findings (todo bug confirmado)
 1. Devolvé en `finding_propuesto` el contenido de
    `templates/FINDING.md.template` del toolkit: id `F-AAAAMMDD-HHMMSS`,
-   síntoma, causa raíz, corrección, ruta exacta de la prueba de regresión,
+   `severidad`, `status: open`, síntoma, causa raíz, corrección, ruta exacta de la prueba de regresión,
    task_id y `candidato_standard`.
 2. La prueba de regresión la escribe el Specialist **antes** del fix. Vos la
    corrés dos veces: tiene que fallar antes del fix y pasar después. Si no
    falló antes, no prueba el bug: `bloquea`.
+   El nombre o la descripción del test lleva el id del finding (ej.
+   `test("F-20260115-103000: no pierde el filtro al recargar")`); si no lo
+   lleva, `bloquea`.
 3. Revisá los findings existentes en `.adf/findings/`: si el mismo patrón de
    causa raíz aparece en 2+ findings, marcá `candidato_standard: si` y
    proponé un standard vía Modo Consultivo (plantilla `standards/_TEMPLATE.md`),
@@ -134,7 +137,7 @@ ci_pipeline: ok | bloquea | no_aplica
 hallazgos: [{gate: bloquea|recomienda, description: "..."}]
 sin_cobertura: []          # rutas cambiadas sin prueba que quedaron en recomienda (gradual)
 finding_propuesto: null | "<contenido completo del finding>"
-regresion: {falla_antes: true|false, pasa_despues: true|false}   # solo si hubo bug
+regresion: {finding: F-..., test: "<ruta>::<nombre>", falla_antes: true|false, pasa_despues: true|false}   # solo si hubo bug
 platforms: {android: passed|failed|not_run, ios: passed|failed|not_run}  # solo si layer: mobile
 notes: "..."
 ```

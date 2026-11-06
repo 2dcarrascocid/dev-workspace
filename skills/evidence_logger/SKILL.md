@@ -31,8 +31,9 @@ Además, siempre:
   pruebas ejecutado y su resultado real, `adopcion` vigente, y cada hallazgo
   con su gate (`bloquea` / `recomienda`). Las rutas cambiadas sin prueba
   que quedaron en `recomienda` se registran como "sin cobertura".
-- **`qa-report.md`**: findings creados (`.adf/findings/<id>.md`), con la ruta
-  de su prueba de regresión y si falló antes / pasó después del fix.
+- **`qa-report.md`**: findings creados o actualizados
+  (`.adf/findings/<id>.md`), con su `status`, la ruta de su prueba de
+  regresión y su `test_result` (falló antes / pasó después del fix).
 
 ## Reglas
 - Nunca sobrescribas evidencia de tareas anteriores — cada `task_id` tiene su
