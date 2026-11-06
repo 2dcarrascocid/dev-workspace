@@ -79,6 +79,11 @@ ambientes y el backend que consume.
   y `AndroidManifest.xml`.
 - Manejar explícitamente: sin conexión, timeout, token expirado y errores del
   backend.
+- Consumir los listados paginados con `next`: botón "Ver más" o scroll
+  infinito según el caso, pidiendo `?next=<cursor>` hasta recibir
+  `next: null`. No asumir número de páginas ni total, no armar ni leer el
+  cursor (es opaco) y volver a la primera página si cambian los filtros,
+  con un modelo Dart tipado `{data, next}`.
 - Priorizar accesibilidad y layouts que funcionen en teléfonos chicos y
   tablets.
 - Si el proyecto tiene una skill de sistema de diseño instalada, usarla en
