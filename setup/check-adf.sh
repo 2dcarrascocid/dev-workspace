@@ -391,10 +391,14 @@ else
     [ "$(basename "$f")" = "_TEMPLATE.md" ] && continue
     found=1
     tr -d '\r' < "$f" > "$TMPD/std"
-    missing=$(grep '^## ' "$TEMPLATE" | tr -d '\r' | while IFS= read -r h; do
+    # "## Escenarios" es posterior a los primeros standards: su falta es WARN
+    # (adopción gradual); el resto de las secciones sigue siendo obligatorio.
+    missing=$(grep '^## ' "$TEMPLATE" | tr -d '\r' | grep -vxF '## Escenarios' | while IFS= read -r h; do
       grep -qxF "$h" "$TMPD/std" || echo "$h"
     done | tr '\n' ',' | sed 's/,$//; s/,/, /g')
     [ -z "$missing" ] || fail "standards/$(basename "$f"): faltan secciones: $missing"
+    grep -qxF '## Escenarios' "$TMPD/std" \
+      || warn "standards/$(basename "$f"): sin '## Escenarios' (qa-tester no puede verificar conformidad por escenario)"
   done
   [ "$found" -eq 1 ] || note "standards/ está vacío (nada que revisar)"
 fi
