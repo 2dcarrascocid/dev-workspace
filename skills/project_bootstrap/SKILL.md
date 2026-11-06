@@ -60,6 +60,13 @@ Python, `Npgsql`/`Microsoft.EntityFrameworkCore.SqlServer` en .NET).
    agregó `mobile-x/` más adelante), agregar solo esa línea nueva sin tocar
    el resto del archivo.
 
+## Carpeta `./tmp`
+1. Si `git ls-files tmp/` no devuelve nada: crear `./tmp/` si no existe
+   (`tmp/` ya está en el `.gitignore` de la plantilla).
+2. Si devuelve archivos (el proyecto ya versiona `tmp/`): no crearla, no
+   tocarla, no agregar `tmp/` al `.gitignore`, y avisar al usuario que los
+   temporales de los agentes necesitan otra carpeta (Modo Consultivo).
+
 ## DON'T
 - No inventar convenciones de commits/branches que no estén documentadas en
   el repo (ej. no asumir Conventional Commits si no hay evidencia).

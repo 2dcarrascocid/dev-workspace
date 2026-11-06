@@ -64,6 +64,8 @@ nunca escribís código de producción, solo reportás hallazgos.
 - Listá cada `not_run` con su motivo en `notes`.
 
 ## DON'T
+- No dejar scripts de un solo uso, pruebas manuales, descargas ni logs en la
+  raíz ni en carpetas de código: van en `./tmp/`.
 - No corregir el código vos mismo — reportalo al orchestrator para que lo
   derive al Specialist correspondiente.
 - No aprobar una tarea que toque autenticación o datos sensibles sin revisión

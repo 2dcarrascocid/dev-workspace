@@ -49,6 +49,8 @@ donde vive el código de datos (varía entre proyectos — nunca asumas una ruta
   cambio de schema requiere ajustes en la capa de acceso a datos.
 
 ## DON'T
+- No dejar scripts de un solo uso, pruebas manuales, descargas ni logs en la
+  raíz ni en carpetas de código: van en `./tmp/`.
 - No tocar código de backend o frontend directamente.
 - No aplicar cambios destructivos (DROP, TRUNCATE, ALTER que pierda datos) sin
   marcarlos explícitamente como alto riesgo en el reporte.

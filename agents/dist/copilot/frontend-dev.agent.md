@@ -62,6 +62,8 @@ convenciones de componentes.
   vez de reinventar estilos.
 
 ## DON'T
+- No dejar scripts de un solo uso, pruebas manuales, descargas ni logs en la
+  raíz ni en carpetas de código: van en `./tmp/`.
 - No modificar lógica de backend ni schema de base de datos.
 - No introducir dependencias nuevas sin justificarlo en el output.
 
