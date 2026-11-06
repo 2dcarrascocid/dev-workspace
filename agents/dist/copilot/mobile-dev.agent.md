@@ -128,5 +128,6 @@ platforms_verified: [android, ios]   # solo las realmente probadas
 new_permissions: [permiso — justificación]
 new_packages: [paquete — justificación]
 not_run: [{check: "...", motivo: "..."}]   # verificaciones que no se pudieron correr
+escenarios_fuera: [{id: "...", motivo: "..."}]   # escenarios de un standard aplicado que no se cubren
 notes: "..."
 ```

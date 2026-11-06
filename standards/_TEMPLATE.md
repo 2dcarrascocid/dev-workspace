@@ -20,6 +20,16 @@ kebab-case, descriptivo (ej. `error-handling-backend.md`,
      ("manejar errores correctamente") — mostrar el patrón real, con antes/después
      si existe un caso ya resuelto. -->
 
+## Escenarios
+<!-- Casos verificables que prueban que el criterio se cumple. Prefijo único
+     por standard (2-5 mayúsculas, ej. ERR) y un ID por escenario:
+     ERR-01, ERR-02… Cada test que lo cubre lleva el ID en su nombre o
+     descripción (ej. `it("ERR-01: responde 404 si el recurso no existe")`).
+     Los IDs no se reutilizan ni se renumeran: un escenario que deja de
+     aplicar se marca (retirado), no se borra. -->
+- Prefijo: <!-- ERR -->
+- **<PREFIJO>-01** — <!-- dado …, cuando …, entonces … -->
+
 ## Ejemplo de referencia
 <!-- Ruta/commit de un caso ya aplicado en el codebase, si existe, para que el
      agente lo pueda leer directo en vez de solo la descripción. -->

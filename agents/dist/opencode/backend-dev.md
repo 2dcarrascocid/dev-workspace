@@ -90,5 +90,6 @@ status: done | blocked | needs_review
 changes: [archivos tocados]
 api_contract: "..."
 not_run: [{check: "...", motivo: "..."}]   # verificaciones que no se pudieron correr
+escenarios_fuera: [{id: "...", motivo: "..."}]   # escenarios de un standard aplicado que no se cubren
 notes: "..."
 ```
