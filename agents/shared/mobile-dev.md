@@ -85,6 +85,8 @@ ambientes y el backend que consume.
   vez de reinventar estilos.
 
 ## DON'T
+- No dejar scripts de un solo uso, pruebas manuales, descargas ni logs en la
+  raíz ni en carpetas de código: van en `./tmp/`.
 - No modificar backend, schema de base de datos ni la web.
 - No commitear keystores, `key.properties`, certificados ni
   `google-services.json` / `GoogleService-Info.plist` con datos reales.

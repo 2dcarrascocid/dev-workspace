@@ -68,6 +68,8 @@ conocer lenguaje, framework, estilo de API (REST/GraphQL/otro) y convenciones.
   avisarlo explícitamente en el output.
 
 ## DON'T
+- No dejar scripts de un solo uso, pruebas manuales, descargas ni logs en la
+  raíz ni en carpetas de código: van en `./tmp/`.
 - No modificar el schema de base de datos directamente — coordinar con el
   Specialist de DB a través del orchestrator.
 - No escribir código de frontend.

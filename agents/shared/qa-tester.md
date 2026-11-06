@@ -134,6 +134,8 @@ Por cada standard aplicado en la tarea:
 - Reportar reproducción clara de cualquier falla encontrada.
 
 ## DON'T
+- No dejar scripts de un solo uso, pruebas manuales, descargas ni logs en la
+  raíz ni en carpetas de código: van en `./tmp/`.
 - No corregir el código vos mismo — reportá el fallo al orchestrator.
 - No aprobar una tarea sin evidencia de que las pruebas relevantes pasan.
 
