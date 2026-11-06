@@ -146,6 +146,14 @@ delegación:
   escribís el archivo y delegás al Specialist de la capa, en este orden:
   1) la prueba de regresión en la ruta del finding, 2) `qa-tester` verifica
   que falla, 3) el fix, 4) `qa-tester` verifica que pasa.
+- El `status` lo escribís vos, explícito, nunca inferido del código: `open`
+  al crearlo; `resolved` solo cuando `qa-tester` devuelve
+  `falla_antes: true` y `pasa_despues: true`, copiando ese resultado en
+  `test_result`; `wontfix` solo por decisión del humano, con `motivo` (la
+  prueba queda en skip con el id y el motivo).
+- No cerrás la tarea si un finding que tocó queda sin `status`, `resolved`
+  sin `test_result` o `wontfix` sin `motivo`. Un finding que queda `open` va
+  como frente ⏳ en `ESTADO.md`.
 - Si `qa-tester` propone un standard (patrón repetido en 2+ findings), va
   por Modo Consultivo: nadie lo aplica sin aprobación del humano.
 - Por cada ruta en `sin_cobertura` del `qa-tester`, agregá en `ESTADO.md`

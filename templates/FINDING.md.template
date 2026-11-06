@@ -1,7 +1,11 @@
 ---
 id: F-{{AAAAMMDD-HHMMSS}}
 task_id: {{TASK_ID}}                  # evidencia en .claude/evidence/<task-id>/
-prueba_regresion: {{RUTA_EXACTA_DEL_TEST}}   # relativa al repo; falla antes del fix, pasa después
+severidad: {{SEVERIDAD}}              # critical | high | medium | low
+status: open                          # open | resolved | wontfix — explícito, nunca inferido
+prueba_regresion: {{RUTA_EXACTA_DEL_TEST}}   # relativa al repo; falla antes del fix, pasa después; el nombre o descripción del test lleva el id
+test_result: null                     # obligatorio si resolved: "<comando> — falla antes: sí, pasa después: sí (<fecha>)"
+motivo: null                          # obligatorio si wontfix (lo decide el humano; el test queda skip con id y motivo)
 candidato_standard: no                # si | no — si: el patrón ya apareció en otro finding
 ---
 
