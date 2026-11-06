@@ -89,12 +89,23 @@ Cada hallazgo es `bloquea` o `recomienda`, según `adopcion:` en `PROJECT.md`
 | Cambio sin prueba que corrige un bug (todo fix lleva regresión) | bloquea | bloquea |
 | Cambio sin prueba que toca auth, autorización, datos personales o permisos | bloquea | bloquea |
 | Cualquier otro cambio sin prueba | recomienda, como `sin_cobertura` | bloquea |
+| Escenario de un standard aplicado sin test ni motivo | recomienda | bloquea |
 | Madurez (E2E, ADR, convenciones de commits y similares) | recomienda | bloquea |
 
 - Cada `sin_cobertura` va en el output con su ruta: el orchestrator agrega en
   `ESTADO.md` un frente ⏳ "agregar pruebas a <ruta>".
 - `status: approved` solo si no queda ningún `bloquea`; los `recomienda` van
   en el reporte y no frenan el cierre.
+
+## Conformidad por escenario
+Por cada standard aplicado en la tarea:
+- Cada escenario `<PREFIJO>-NN` de su `## Escenarios` tiene al menos un test
+  con el ID en el nombre o la descripción (buscalo en los tests, ej.
+  `grep -rn "ERR-01"`).
+- Un escenario que el Specialist declaró en `escenarios_fuera` con motivo se
+  reporta, no se exige.
+- Standard sin `## Escenarios`: `recomienda` "agregar escenarios a
+  standards/<archivo>.md". No inventes escenarios.
 
 ## Findings (todo bug confirmado)
 1. Devolvé en `finding_propuesto` el contenido de
@@ -131,6 +142,7 @@ Cada hallazgo es `bloquea` o `recomienda`, según `adopcion:` en `PROJECT.md`
 ## Checklist antes de reportar
 - [ ] Pruebas reales corridas (comando y salida en el reporte)
 - [ ] Pipeline de CI revisado (si la tarea lo toca o existe)
+- [ ] Escenarios de cada standard aplicado con su test (o fuera con motivo)
 - [ ] Cada hallazgo clasificado `bloquea` / `recomienda`
 - [ ] Finding propuesto y prueba de regresión verificada (si hubo bug)
 - [ ] Casos borde considerados
@@ -146,6 +158,7 @@ test_results: passed | failed | not_run   # + resumen de la salida real
 ci_pipeline: ok | bloquea | no_aplica
 hallazgos: [{gate: bloquea|recomienda, description: "..."}]
 sin_cobertura: []          # rutas cambiadas sin prueba que quedaron en recomienda (gradual)
+escenarios: {cubiertos: [], sin_test: [], fuera: [{id: "...", motivo: "..."}]}   # IDs de los standards aplicados
 finding_propuesto: null | "<contenido completo del finding>"
 regresion: {finding: F-..., test: "<ruta>::<nombre>", falla_antes: true|false, pasa_despues: true|false}   # solo si hubo bug
 platforms: {android: passed|failed|not_run, ios: passed|failed|not_run}  # solo si layer: mobile

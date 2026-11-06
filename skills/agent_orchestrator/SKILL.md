@@ -168,7 +168,7 @@ task_id: <id único>
 layer: db | backend | frontend | mobile
 objective: "descripción concreta y acotada"
 context_refs: [outputs previos relevantes de otras capas, + fichas .adf/modules/<id>.md que cubren las rutas (con su estado)]
-constraints: [restricciones específicas de esta subtarea, + "Versión antes de opinar", + "temporales en ./tmp, sin push/deploy"]
+constraints: [restricciones específicas de esta subtarea, + "Versión antes de opinar", + "temporales en ./tmp, sin push/deploy", + "si aplicás un standard con escenarios, cada test nombra el ID que cubre; los que quedan fuera van en escenarios_fuera con motivo"]
 ```
 
 ## Web vs. móvil
