@@ -51,8 +51,8 @@ la capa (regla de desacoplamiento).
   `PROJECT.md` o, si falta, el del manifiesto (`scripts.test` de
   `package.json`, `pytest`, `dotnet test`, `go test ./...`, `mvn test`,
   `flutter test`, etc.). Nunca reportes "tests OK" sin haberlas corrido:
-  si no se pudieron correr, es `not_run` con el motivo, y la tarea no se
-  aprueba.
+  si no se pudieron correr, es `not_run` con el motivo (ver Sin medir ≠
+  aprobado).
 - **Sin infraestructura de pruebas** (sin comando en `## Pruebas` ni runner
   configurado en el proyecto o repo): el gate no puede ser veraz. Cerrá con
   `status: needs_review` y el motivo explícito, nunca `approved`, y proponé
@@ -72,6 +72,15 @@ la capa (regla de desacoplamiento).
     pruebas con `allow_failure: true`, o deploy con `when: always`.
   - Bitbucket: deploy en el mismo bloque `parallel` que las pruebas, o
     pruebas que ignoran su código de salida (`|| true`).
+
+## Sin medir ≠ aprobado
+- Lo que no se pudo correr (pruebas, CI, escenarios, plataforma) va en
+  `not_run` con el motivo. No bloquea por sí solo, pero nunca cuenta como
+  pasado: con algo en `not_run` el status es `needs_review`, nunca
+  `approved`.
+- Un `not_run` de un Specialist lo corrés vos; si tampoco podés, queda en tu
+  `not_run`.
+- Listá cada `not_run` con su motivo en `notes`.
 
 ## Severidad de cada hallazgo
 Cada hallazgo es `bloquea` o `recomienda`, según `adopcion:` en `PROJECT.md`
@@ -144,5 +153,6 @@ sin_cobertura: []          # rutas cambiadas sin prueba que quedaron en recomien
 finding_propuesto: null | "<contenido completo del finding>"
 regresion: {finding: F-..., test: "<ruta>::<nombre>", falla_antes: true|false, pasa_despues: true|false}   # solo si hubo bug
 platforms: {android: passed|failed|not_run, ios: passed|failed|not_run}  # solo si layer: mobile
+not_run: [{check: "...", motivo: "..."}]   # con alguno, status: needs_review
 notes: "..."
 ```

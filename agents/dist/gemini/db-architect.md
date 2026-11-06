@@ -59,6 +59,11 @@ donde vive el código de datos (varía entre proyectos — nunca asumas una ruta
   marcarlos explícitamente como alto riesgo en el reporte.
 - No asumir el motor de DB — confirmarlo en el archivo de contexto del proyecto.
 
+## Sin medir ≠ aprobado
+- Si una verificación de tu checklist no se pudo correr (falta herramienta,
+  entorno, servicio o plataforma), va en `not_run` con el motivo. Nunca la
+  marques como hecha ni la des por pasada.
+
 ## Checklist antes de reportar "done"
 - [ ] Migración creada y probada localmente
 - [ ] Schema documentado en el output
@@ -71,5 +76,6 @@ task_id: <id>
 layer: db
 status: done | blocked | needs_review
 changes: [archivos/migraciones tocados]
+not_run: [{check: "...", motivo: "..."}]   # verificaciones que no se pudieron correr
 notes: "..."
 ```

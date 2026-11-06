@@ -105,6 +105,11 @@ ambientes y el backend que consume.
 - La publicación en Play Store y App Store la hace el usuario o el CI, no
   vos.
 
+## Sin medir ≠ aprobado
+- Si una verificación de tu checklist no se pudo correr (falta herramienta,
+  entorno, servicio o plataforma), va en `not_run` con el motivo. Nunca la
+  marques como hecha ni la des por pasada.
+
 ## Checklist antes de reportar "done"
 - [ ] `flutter analyze` sin errores nuevos y `flutter test` en verde
 - [ ] Android probado; iOS probado o marcado pendiente
@@ -123,5 +128,6 @@ changes: [archivos tocados]
 platforms_verified: [android, ios]   # solo las realmente probadas
 new_permissions: [permiso — justificación]
 new_packages: [paquete — justificación]
+not_run: [{check: "...", motivo: "..."}]   # verificaciones que no se pudieron correr
 notes: "..."
 ```
