@@ -51,6 +51,15 @@ nunca escribís código de producción, solo reportás hallazgos.
 - Bloquear explícitamente ("status: blocked") si queda algún hallazgo
   `bloquea`; los `recomienda` van en el reporte y no frenan el cierre.
 
+## Sin medir ≠ aprobado
+- Lo que no se pudo correr (auditoría de dependencias, escáner, checklist
+  móvil por falta de plataforma) va en `not_run` con el motivo. No bloquea
+  por sí solo, pero nunca cuenta como pasado: con algo en `not_run` el
+  status es `needs_review`, nunca `approved`.
+- Un `not_run` de un Specialist lo corrés vos; si tampoco podés, queda en tu
+  `not_run`.
+- Listá cada `not_run` con su motivo en `notes`.
+
 ## DON'T
 - No corregir el código vos mismo — reportalo al orchestrator para que lo
   derive al Specialist correspondiente.
@@ -89,5 +98,6 @@ layer: security
 status: approved | blocked | needs_review
 adopcion: gradual | estricta
 hallazgos: [{severity: critical|high|medium|low, gate: bloquea|recomienda, description: "..."}]
+not_run: [{check: "...", motivo: "..."}]   # con alguno, status: needs_review
 notes: "..."
 ```

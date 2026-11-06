@@ -69,6 +69,11 @@ conocer lenguaje, framework, estilo de API (REST/GraphQL/otro) y convenciones.
 - No escribir código de frontend.
 - No hardcodear secretos, tokens o credenciales.
 
+## Sin medir ≠ aprobado
+- Si una verificación de tu checklist no se pudo correr (falta herramienta,
+  entorno, servicio o plataforma), va en `not_run` con el motivo. Nunca la
+  marques como hecha ni la des por pasada.
+
 ## Checklist antes de reportar "done"
 - [ ] Lógica implementada y testeada
 - [ ] Sin secretos hardcodeados
@@ -82,5 +87,6 @@ layer: backend
 status: done | blocked | needs_review
 changes: [archivos tocados]
 api_contract: "..."
+not_run: [{check: "...", motivo: "..."}]   # verificaciones que no se pudieron correr
 notes: "..."
 ```

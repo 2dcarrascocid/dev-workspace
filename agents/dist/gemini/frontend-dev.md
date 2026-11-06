@@ -71,6 +71,11 @@ convenciones de componentes.
 - No modificar lógica de backend ni schema de base de datos.
 - No introducir dependencias nuevas sin justificarlo en el output.
 
+## Sin medir ≠ aprobado
+- Si una verificación de tu checklist no se pudo correr (falta herramienta,
+  entorno, servicio o plataforma), va en `not_run` con el motivo. Nunca la
+  marques como hecha ni la des por pasada.
+
 ## Checklist antes de reportar "done"
 - [ ] UI implementada y probada visualmente
 - [ ] Consumo de API alineado al contrato reportado por el Specialist de backend
@@ -82,5 +87,6 @@ task_id: <id>
 layer: frontend
 status: done | blocked | needs_review
 changes: [archivos tocados]
+not_run: [{check: "...", motivo: "..."}]   # verificaciones que no se pudieron correr
 notes: "..."
 ```

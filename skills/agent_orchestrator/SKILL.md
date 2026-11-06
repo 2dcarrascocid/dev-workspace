@@ -86,7 +86,9 @@ delegación:
    vos.
 4. **Validación obligatoria**: ninguna tarea se cierra sin que al menos un
    Validator (`security-reviewer` y/o `qa-tester`, según corresponda) haya
-   corrido sobre el resultado.
+   corrido sobre el resultado. Todo `not_run` de un Specialist o Validator
+   se informa en el reporte de cierre; con alguno, la tarea cierra
+   `needs_review`.
 5. **Evidencia**: invocá `evidence_logger` para registrar plan, outputs de
    cada Specialist y resultado de validación.
 6. **Estado**: antes de reportar el cierre, actualizá `.adf/ESTADO.md`.
