@@ -54,13 +54,14 @@ en una máquina nueva), no se copian.
 Frameworks o colecciones revisados de los que se tomaron ideas puntuales,
 implementadas de forma nativa en el ADF, sin instalarlos.
 
-### QDD Framework — Descartado como plataforma
+### QDD Framework — Descartado (reconfirmado 2026-11-05, v2.9.10)
 
-Fuente: github.com/trdago/qdd-framework. Reevaluado 2026-10-31 (v2.8.0-rc.2).
+Fuente: github.com/trdago/qdd-framework.
 
-- **Motivos**: choca con `agent_orchestrator` como router; ejecuta agentes
-  con `--dangerously-skip-permissions`; descarga reglas sin versión fija; no
-  cubre Gemini ni Codex.
+- **Motivos**: escribe un bloque propio en `AGENTS.md`/`CLAUDE.md` (choca con
+  los symlinks a `PROJECT.md`); relay móvil y publicación automática de
+  incidentes; modo goal con autoaprobación; instalación frágil en
+  Windows/Git Bash.
 - **Ideas tomadas** (implementación propia):
   1. Modo Consultivo, bloque obligatorio en los roles (a5f772a).
   2. `standards/_TEMPLATE.md` (a5f772a).
@@ -72,6 +73,14 @@ Fuente: github.com/trdago/qdd-framework. Reevaluado 2026-10-31 (v2.8.0-rc.2).
   7. Fichas de módulo (`.adf/modules/`, solo el humano aprueba).
   8. Findings con prueba de regresión (`.adf/findings/`).
   9. Gate veraz con adopción gradual (`adopcion: gradual|estricta`).
+  10. Findings con `status` y `test_result` obligatorios; el test de
+      regresión nombra el id (38df123).
+  11. Sin medir ≠ aprobado: `not_run` en los 6 roles (a82f541).
+  12. Conformidad de standards por escenario (`<PREFIJO>-NN`) (2045d0f,
+      lint en 4335ace).
+  13. Certificación con escenarios, findings y standards genéricos/locales
+      (2e897ea).
+  14. `./tmp` en los roles y en `project_bootstrap` (12993ec).
 - **Descartadas a propósito**: score 0-100, blueprints, dashboard,
   keep-alive, equipo resolutor, certificaciones ISO de IA.
 
