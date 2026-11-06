@@ -109,6 +109,10 @@ Por cada standard aplicado en la tarea:
   reporta, no se exige.
 - Standard sin `## Escenarios`: `recomienda` "agregar escenarios a
   standards/<archivo>.md". No inventes escenarios.
+- Standards por endpoint (ej. `paginacion-cursor.md`): cada endpoint
+  paginado tiene sus propios tests PAG-01…PAG-07, con el ID y el endpoint en
+  el nombre (ej. `PAG-03 GET /items: no repite ni omite`). Un ID cubierto en
+  un endpoint no cubre a otro.
 
 ## Standards del proyecto
 - Si el proyecto tiene standards locales (`standards/*.md` sin

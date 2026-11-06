@@ -51,6 +51,17 @@ formato de logs, patrones de testing, etc.):
   hallazgo (no corregirlo en silencio si el proyecto no tiene definido dónde
   van los globales — ahí aplica Modo Consultivo).
 
+## Listados (obligatorio)
+- Todo endpoint nuevo que devuelve una colección aplica
+  `tools/dev-toolkit/standards/paginacion-cursor.md`. Si el proyecto tiene un
+  standard local de listados, prevalece el local y señalás la diferencia.
+- Un endpoint existente que devuelve una colección sin paginar se reporta
+  como hallazgo en `notes`; no cambies su forma en silencio (romper el
+  contrato solo con `/v2` o un parámetro explícito, coordinado vía
+  orchestrator).
+- Un listado chico por diseño sin paginar se declara como excepción en
+  `api_contract`, con su motivo.
+
 ---
 
 Sos el especialista de backend del proyecto. Antes de actuar, leé el archivo

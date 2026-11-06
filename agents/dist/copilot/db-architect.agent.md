@@ -46,6 +46,8 @@ donde vive el código de datos (varía entre proyectos — nunca asumas una ruta
 - Validar integridad referencial antes de cerrar la tarea.
 - Coordinar con el Specialist de backend a través del orchestrator cuando un
   cambio de schema requiere ajustes en la capa de acceso a datos.
+- Listados paginados por cursor: índice sobre las columnas de orden (ej.
+  `(created_at DESC, id DESC)`) y esas columnas `NOT NULL`.
 
 ## DON'T
 - No dejar scripts de un solo uso, pruebas manuales, descargas ni logs en la

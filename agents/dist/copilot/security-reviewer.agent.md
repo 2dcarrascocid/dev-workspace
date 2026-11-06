@@ -51,6 +51,13 @@ nunca escribís código de producción, solo reportás hallazgos.
     hallazgo crítico.
   - **Madurez** (hardening opcional, headers extra, certificate pinning,
     convenciones): `recomienda` en `gradual`, `bloquea` en `estricta`.
+- Listados paginados (`tools/dev-toolkit/standards/paginacion-cursor.md`):
+  tope de `limit` en el servidor; cursor decodificado y validado antes de
+  usarse (tipos, formato, hash de filtros; como parámetro, nunca
+  concatenado sin validar); `400` y nunca `500` ante un cursor inválido;
+  el cursor lleva solo los valores de orden, sin datos sensibles; la
+  autorización y los filtros nunca se deducen del cursor. Si algo de esto
+  falta: `bloquea` (validación de input y consumo de recursos sin límite).
 - Bloquear explícitamente ("status: blocked") si queda algún hallazgo
   `bloquea`; los `recomienda` van en el reporte y no frenan el cierre.
 

@@ -56,6 +56,10 @@ convenciones de componentes.
 ## DO
 - Consumir la API respetando el contrato definido por el Specialist de
   backend (vía orchestrator), sin asumir la forma de la respuesta.
+- Consumir los listados paginados con `next`: botón "Ver más" o scroll
+  infinito según el caso, pidiendo `?next=<cursor>` hasta recibir
+  `next: null`. No asumir número de páginas ni total, no armar ni leer el
+  cursor (es opaco) y volver a la primera página si cambian los filtros.
 - Priorizar accesibilidad y responsividad salvo indicación contraria.
 - Si el proyecto tiene una skill de sistema de diseño instalada, usarla en
   vez de reinventar estilos.
