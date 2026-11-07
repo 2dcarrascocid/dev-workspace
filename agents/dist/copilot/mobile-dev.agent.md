@@ -86,7 +86,7 @@ ambientes y el backend que consume.
   infinito según el caso, pidiendo `?next=<cursor>` hasta recibir
   `next: null`. No asumir número de páginas ni total, no armar ni leer el
   cursor (es opaco) y volver a la primera página si cambian los filtros,
-  con un modelo Dart tipado `{data, next}`.
+  con un modelo tipado `{data, next}`.
 - Priorizar accesibilidad y layouts que funcionen en teléfonos chicos y
   tablets.
 - Si el proyecto tiene una skill de sistema de diseño instalada, usarla en

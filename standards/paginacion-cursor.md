@@ -61,6 +61,15 @@ listado pagina siempre. Endpoints existentes: ver "Compatibilidad".
   consulta (siempre como parámetros, nunca concatenados sin validar).
 - Si cambian los filtros o el orden, `f` no coincide → `400`
   `INVALID_CURSOR`; el cliente reinicia sin `next`.
+- Los valores decodificados del cursor se validan por tipo (cada uno contra
+  el tipo de su columna de orden) y van **siempre como parámetros** de la
+  consulta (`$1`, `?`, binding del driver u ORM), nunca concatenados al SQL
+  ni a un filtro textual. Si el cliente de base de datos solo acepta un
+  filtro como texto (ej. `.or()` de supabase-js), se interpolan únicamente
+  valores ya validados por tipo y formato.
+- "Cursor manipulado" significa malformado, de otra versión (`v`) o emitido
+  con otros filtros u orden (`f`): en todos esos casos `400`
+  `INVALID_CURSOR`.
 - No se firma: un cursor alterado pero válido solo cambia el punto de
   partida. La autorización y los filtros se aplican siempre en el servidor,
   nunca se deducen del cursor.
@@ -156,4 +165,4 @@ return { data: page, next };
 ## Historial
 - Creado: 2026-11-06
 - Aprobado por: responsable del dev-toolkit (Modo Consultivo, T-20261106-paginacion)
-- Última revisión: 2026-11-06
+- Última revisión: 2026-11-07 (validación por tipo y parámetros; definición de cursor manipulado)
