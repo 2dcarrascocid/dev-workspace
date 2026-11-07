@@ -80,10 +80,9 @@ Tomadas el 2026-11-07 sobre los hallazgos de
   fallar si falta la plantilla o si un standard no tiene sus secciones
   obligatorias, con una prueba del caso que hoy pasa mal (standard sin
   secciones → OK).
-  - *Señalado, pendiente de confirmación*: la versión de `6c6a864^` trae
-    ejemplos tomados de un proyecto real (l. 5-6, nombres de standards;
-    l. 16, `routes/api/`). Por la regla de la sección A se propone
-    restaurarla con esos ejemplos neutralizados.
+  - *Resuelto (2026-11-07)*: se restaura con los ejemplos neutralizados
+    (sin nombres de standards, rutas ni términos de ningún proyecto real),
+    por la regla de la sección A.
 - **H2 — Proveedores**: el framework incluye los 5 presentes (`claude`,
   `gemini`, `codex`, `copilot`, `opencode`). Donde el plan diga "los 3
   proveedores" se lee "todos los proveedores presentes". Copilot y
@@ -99,8 +98,11 @@ Tomadas el 2026-11-07 sobre los hallazgos de
   submodule) se actualiza en la Fase 4; el comentario de `.gitignore` en
   la Fase 2.5.
 - **Historial**: el repo es público y su historial contiene datos de un
-  proyecto real. Se decide antes de la Fase 9 (paso agregado allí). Hasta
-  entonces no se reescribe nada.
+  proyecto real. Se limpia **antes de la Fase 1** con `git filter-repo`
+  sobre un clon espejo fuera de la copia de trabajo (`--replace-text`,
+  `--replace-message` y mailmap). El archivo de reemplazos nunca se
+  versiona. El force push lo ejecuta la persona. La Fase 9 verifica que
+  la limpieza quedó hecha antes del tag.
 - **Check 13 (MSYS)**: el FAIL de la Fase 0 se obtuvo en Windows (Git Bash,
   `MINGW64_NT-10.0-19045`) con `MSYS=disable_pcon`. Es el comportamiento
   esperado del check, no un hallazgo.
@@ -327,6 +329,12 @@ solo lo necesario). Ayuda en español (`adf help`, `adf <cmd> --help`).
   proyecto (encadenarlos o avisar):
   - pre-commit: `secrets_scanner` sobre lo staged; bloquea archivos de
     credenciales (`.env`, `*.env` salvo ejemplos con placeholders).
+  - pre-commit: rechaza lo staged (contenido y nombres de archivo) que
+    contenga un término de la lista de bloqueo `~/.config/adf/denylist`
+    (uno por línea, `#` = comentario, sin distinguir mayúsculas). La lista
+    vive fuera del repo y **nunca se versiona**. Si no existe, el hook
+    avisa y no bloquea. Al rechazar, informa archivo y línea pero no
+    repite el término.
   - pre-push: `adf check`.
   - Bypass solo con `--no-verify`, que queda documentado como excepción
     del humano, nunca para el agente.
@@ -414,7 +422,9 @@ con la sección del CHANGELOG. Nada más.
   Windows). Copilot y OpenCode figuran como "sin probar" hasta que se
   usen (E · H2).
 - (E) Resolver la limpieza de historial antes del tag `v1.0.0`: el repo
-  es público y su historial contiene datos de un proyecto real.
+  es público y su historial contiene datos de un proyecto real. Verificar
+  con `git log -p --all` + la lista de bloqueo que no quedan
+  coincidencias.
 - `docs/cumplimiento.md`: tabla de capas (hooks del CLI, git hooks,
   `adf check`, Validator aislado, CI del proyecto, banco de pruebas): qué
   evita cada una y si depende del modelo.
