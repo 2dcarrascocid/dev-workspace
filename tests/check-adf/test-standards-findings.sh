@@ -54,6 +54,21 @@ P=$(new_project p-completo)
 printf '%s\n' "$STD_SECTIONS" > "$P/standards/x.md"
 expect "standard con todas las secciones" 7 OK "$(run --project "$P")"
 
+# Standards genéricos del toolkit: Escenarios, prefijo y al menos un ID.
+expect "standards genéricos reales del toolkit" 7 OK "$(run)"
+
+printf '%s\n' "$STD_SECTIONS" | grep -vxF '## Escenarios' > "$TK/standards/zz-generico.md"
+expect "standard genérico sin ## Escenarios" 7 FAIL "$(run)"
+
+printf '%s\n' "$STD_SECTIONS" > "$TK/standards/zz-generico.md"
+expect "standard genérico con Escenarios sin prefijo ni IDs" 7 FAIL "$(run)"
+
+{ printf '%s\n' "$STD_SECTIONS" | sed 's/^## Escenarios$/## Escenarios\
+- Prefijo: ZZ\
+- **ZZ-01** — dado …, cuando …, entonces …/'; } > "$TK/standards/zz-generico.md"
+expect "standard genérico completo con prefijo e IDs" 7 OK "$(run)"
+rm -f "$TK/standards/zz-generico.md"
+
 mv "$TK/standards/_TEMPLATE.md" "$WORK/_TEMPLATE.md.bak"
 expect "falta la plantilla, sin --project" 7 FAIL "$(run)"
 # El caso de la Fase 0 (H1): sin plantilla, un standard sin secciones salía OK.

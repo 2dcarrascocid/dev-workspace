@@ -377,36 +377,62 @@ else
 fi
 end_check
 
-# ---------- 7. Standards del proyecto ----------
-begin_check "7. Standards del proyecto (secciones de standards/_TEMPLATE.md)"
+# ---------- 7. Standards ----------
+begin_check "7. Standards genéricos y del proyecto (secciones de standards/_TEMPLATE.md)"
 TEMPLATE="$ROOT/standards/_TEMPLATE.md"
+
+# $1 archivo, $2 etiqueta, $3 = 1 si es genérico del toolkit.
+# Secciones de la plantilla obligatorias. "## Escenarios" es posterior a los
+# primeros standards locales: en un local su falta es WARN (adopción gradual);
+# en un genérico es FAIL, junto con su prefijo y al menos un escenario.
+check_standard() {
+  tr -d '\r' < "$1" > "$TMPD/std"
+  missing=$(grep '^## ' "$TEMPLATE" | tr -d '\r' | grep -vxF '## Escenarios' | while IFS= read -r h; do
+    grep -qxF "$h" "$TMPD/std" || echo "$h"
+  done | tr '\n' ',' | sed 's/,$//; s/,/, /g')
+  [ -z "$missing" ] || fail "$2: faltan secciones: $missing"
+  if ! grep -qxF '## Escenarios' "$TMPD/std"; then
+    if [ "$3" -eq 1 ]; then
+      fail "$2: falta '## Escenarios' (obligatoria en los standards genéricos)"
+    else
+      warn "$2: sin '## Escenarios' (qa-tester no puede verificar conformidad por escenario)"
+    fi
+  elif [ "$3" -eq 1 ]; then
+    pfx=$(sed -n 's/^- Prefijo: *\([A-Z]\{2,5\}\) *$/\1/p' "$TMPD/std" | head -n 1)
+    if [ -z "$pfx" ]; then
+      fail "$2: falta '- Prefijo: <2-5 mayúsculas>' en '## Escenarios'"
+    elif ! grep -q "^- \*\*$pfx-[0-9][0-9]\*\*" "$TMPD/std"; then
+      fail "$2: ningún escenario '**$pfx-NN**' en '## Escenarios'"
+    fi
+  fi
+}
+
 # Sin plantilla no hay secciones que exigir: antes el grep fallaba en silencio
 # y cualquier standard pasaba. Ahora es FAIL, con o sin --project.
 if [ ! -f "$TEMPLATE" ]; then
   fail "falta standards/_TEMPLATE.md en el toolkit (no se pueden verificar los standards)"
 elif ! grep -q '^## ' "$TEMPLATE"; then
   fail "standards/_TEMPLATE.md no tiene secciones '## ' (no se pueden verificar los standards)"
-elif [ -z "$PROJECT" ]; then
-  skip "solo con --project"
-elif [ ! -d "$PROJECT/standards" ]; then
-  note "el proyecto no tiene standards/ (nada que revisar)"
 else
-  found=0
-  for f in "$PROJECT"/standards/*.md; do
+  for f in "$ROOT"/standards/*.md; do
     [ -f "$f" ] || continue
     [ "$(basename "$f")" = "_TEMPLATE.md" ] && continue
-    found=1
-    tr -d '\r' < "$f" > "$TMPD/std"
-    # "## Escenarios" es posterior a los primeros standards: su falta es WARN
-    # (adopción gradual); el resto de las secciones sigue siendo obligatorio.
-    missing=$(grep '^## ' "$TEMPLATE" | tr -d '\r' | grep -vxF '## Escenarios' | while IFS= read -r h; do
-      grep -qxF "$h" "$TMPD/std" || echo "$h"
-    done | tr '\n' ',' | sed 's/,$//; s/,/, /g')
-    [ -z "$missing" ] || fail "standards/$(basename "$f"): faltan secciones: $missing"
-    grep -qxF '## Escenarios' "$TMPD/std" \
-      || warn "standards/$(basename "$f"): sin '## Escenarios' (qa-tester no puede verificar conformidad por escenario)"
+    check_standard "$f" "toolkit standards/$(basename "$f")" 1
   done
-  [ "$found" -eq 1 ] || note "standards/ está vacío (nada que revisar)"
+  if [ -z "$PROJECT" ]; then
+    note "standards del proyecto: solo con --project"
+  elif [ ! -d "$PROJECT/standards" ]; then
+    note "el proyecto no tiene standards/ (nada que revisar)"
+  else
+    found=0
+    for f in "$PROJECT"/standards/*.md; do
+      [ -f "$f" ] || continue
+      [ "$(basename "$f")" = "_TEMPLATE.md" ] && continue
+      found=1
+      check_standard "$f" "standards/$(basename "$f")" 0
+    done
+    [ "$found" -eq 1 ] || note "standards/ está vacío (nada que revisar)"
+  fi
 fi
 end_check
 
