@@ -147,6 +147,10 @@ delegación:
 - **Dónde**: `.adf/findings/<id>.md` (plantilla en
   `templates/FINDING.md.template`), con la misma regla de topologías que las
   fichas: A/C en `.adf/` de la raíz, B en `<repo-hijo>/.adf/`.
+- **Id**: `FND-NNN`, correlativo por repo donde vive el finding (el mayor
+  `FND-` existente en su `.adf/findings/` + 1; el primero es `FND-001`). Los
+  `F-AAAAMMDD-HHMMSS` anteriores son legado: se siguen leyendo, no se
+  renombran ni se reescriben.
 - Cuando `qa-tester` confirma un bug, devuelve `finding_propuesto`; vos
   escribís el archivo y delegás al Specialist de la capa, en este orden:
   1) la prueba de regresión en la ruta del finding, 2) `qa-tester` verifica

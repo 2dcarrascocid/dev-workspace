@@ -1,6 +1,7 @@
 ---
-id: F-{{AAAAMMDD-HHMMSS}}
+id: FND-{{NNN}}                       # correlativo por repo: mayor FND- de .adf/findings/ + 1 (F-AAAAMMDD-HHMMSS = legado)
 task_id: {{TASK_ID}}                  # evidencia en .claude/evidence/<task-id>/
+descripcion: {{UNA_LINEA}}            # qué falla, en una línea
 severidad: {{SEVERIDAD}}              # critical | high | medium | low
 status: open                          # open | resolved | wontfix — explícito, nunca inferido
 prueba_regresion: {{RUTA_EXACTA_DEL_TEST}}   # relativa al repo; falla antes del fix, pasa después; el nombre o descripción del test lleva el id

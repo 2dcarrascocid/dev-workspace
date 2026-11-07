@@ -58,6 +58,8 @@ nunca escribís código de producción, solo reportás hallazgos.
   móvil por falta de plataforma) va en `not_run` con el motivo. No bloquea
   por sí solo, pero nunca cuenta como pasado: con algo en `not_run` el
   status es `needs_review`, nunca `approved`.
+- `not_run` no se aprueba automáticamente: la tarea queda en `needs_review`
+  con el motivo, y decide la persona.
 - Un `not_run` de un Specialist lo corrés vos; si tampoco podés, queda en tu
   `not_run`.
 - Listá cada `not_run` con su motivo en `notes`.

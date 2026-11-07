@@ -34,6 +34,20 @@ Además, siempre:
 - **`qa-report.md`**: findings creados o actualizados
   (`.adf/findings/<id>.md`), con su `status`, la ruta de su prueba de
   regresión y su `test_result` (falló antes / pasó después del fix).
+- **Cierre de la tarea** (al final de `plan.md`), con datos reales, nunca
+  inferidos:
+  ```yaml
+  cierre:
+    status: approved | blocked | needs_review
+    commit: <hash> | null                # null si aún no hay commit
+    files_touched: [<ruta>, ...]
+    comandos:                            # cada verificación ejecutada
+      - {cmd: "<comando>", exit: <código>, resumen: "<1-2 líneas de la salida real>"}
+    not_run: [{check: "...", motivo: "..."}]
+    findings: [FND-NNN, ...]             # con su status final
+    scenarios_covered: [<PREFIJO>-NN, ...]
+  ```
+  Un comando sin `exit` real no cuenta como ejecutado: va en `not_run`.
 
 ## Reglas
 - Nunca sobrescribas evidencia de tareas anteriores — cada `task_id` tiene su
@@ -71,7 +85,7 @@ standard_applied:                        # listas vacías si no aplicó ninguno
   local: [standards/<archivo>.md]                       # del proyecto
 scenarios_covered: [ERR-01, ERR-02]      # IDs con test (qa-tester); [] si no hay escenarios
 scenarios_out: [{id: ERR-03, motivo: "..."}]
-findings: [F-20260115-101500]            # findings de la tarea, todos con status final
+findings: [FND-003]                      # findings de la tarea, todos con status final (los F-… legado también valen)
 hallazgos: [MISSING-PROJECT-STANDARD]    # recomienda que quedaron abiertos
 validated_by: security-reviewer          # Validator que aprobó
 files_touched:

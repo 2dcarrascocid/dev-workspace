@@ -74,7 +74,9 @@ conocer lenguaje, framework, estilo de API (REST/GraphQL/otro) y convenciones.
 ## Sin medir ≠ aprobado
 - Si una verificación de tu checklist no se pudo correr (falta herramienta,
   entorno, servicio o plataforma), va en `not_run` con el motivo. Nunca la
-  marques como hecha ni la des por pasada.
+  marques como hecha ni la des por pasada. Con algo en `not_run`, reportá
+  `status: needs_review` con el motivo: nada se aprueba solo, decide la
+  persona.
 
 ## Checklist antes de reportar "done"
 - [ ] Lógica implementada y testeada
