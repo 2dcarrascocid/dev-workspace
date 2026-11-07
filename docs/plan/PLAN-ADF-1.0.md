@@ -98,11 +98,9 @@ Tomadas el 2026-11-07 sobre los hallazgos de
   submodule) se actualiza en la Fase 4; el comentario de `.gitignore` en
   la Fase 2.5.
 - **Historial**: el repo es público y su historial contiene datos de un
-  proyecto real. Se limpia **antes de la Fase 1** con `git filter-repo`
-  sobre un clon espejo fuera de la copia de trabajo (`--replace-text`,
-  `--replace-message` y mailmap). El archivo de reemplazos nunca se
-  versiona. El force push lo ejecuta la persona. La Fase 9 verifica que
-  la limpieza quedó hecha antes del tag.
+  proyecto real. La limpieza con `git filter-repo` se preparó y se
+  **canceló** (2026-11-07): no se reescribió ni se empujó nada. El paso de
+  la Fase 9 queda como decisión pendiente antes del tag.
 - **Check 13 (MSYS)**: el FAIL de la Fase 0 se obtuvo en Windows (Git Bash,
   `MINGW64_NT-10.0-19045`) con `MSYS=disable_pcon`. Es el comportamiento
   esperado del check, no un hallazgo.
