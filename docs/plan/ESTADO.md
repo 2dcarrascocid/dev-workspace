@@ -7,7 +7,7 @@ Se lee primero al iniciar sesión. Una línea por fase. Plan: `docs/plan/PLAN-AD
 | 0 — Diagnóstico | hecha | 2026-11-07 | `864d439` | Rama creada desde `main`. Diagnóstico en `FASE-0-diagnostico.md`. Pendientes de decisión: H1-H5. |
 | Limpieza de historial | cancelada | 2026-11-07 | — | Cancelada por la persona. Espejo y archivos de reemplazo borrados; no se hizo push. El historial público sigue con datos de un proyecto real. |
 | 1 — Versionado | pendiente | — | — | — |
-| 2 — Calidad: findings, evidencia y escenarios | pendiente | — | — | Depende de H1, H3 y H4. |
+| 2 — Calidad: findings, evidencia y escenarios | hecha | 2026-11-07 | `96cad2d`..`051ef05` | 7 commits traídos con cherry-pick de `origin/2dcarrascocid/feat-dev-toolkit-generic` + 3 de ajuste (FND-NNN, `not_run` → `needs_review`, comandos en el cierre, checks 7 y 11 con pruebas). `8096f4a` (paginación) queda para la Fase 3.1. |
 | 3 — Standards genéricos nuevos | pendiente | — | — | — |
 | 4 — `adf.yaml` y perfiles | pendiente | — | — | Usa la tabla de amarres de 0.3. |
 | 5 — Comando `adf` y verificación | pendiente | — | — | — |
