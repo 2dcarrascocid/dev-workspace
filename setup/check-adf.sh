@@ -380,7 +380,13 @@ end_check
 # ---------- 7. Standards del proyecto ----------
 begin_check "7. Standards del proyecto (secciones de standards/_TEMPLATE.md)"
 TEMPLATE="$ROOT/standards/_TEMPLATE.md"
-if [ -z "$PROJECT" ]; then
+# Sin plantilla no hay secciones que exigir: antes el grep fallaba en silencio
+# y cualquier standard pasaba. Ahora es FAIL, con o sin --project.
+if [ ! -f "$TEMPLATE" ]; then
+  fail "falta standards/_TEMPLATE.md en el toolkit (no se pueden verificar los standards)"
+elif ! grep -q '^## ' "$TEMPLATE"; then
+  fail "standards/_TEMPLATE.md no tiene secciones '## ' (no se pueden verificar los standards)"
+elif [ -z "$PROJECT" ]; then
   skip "solo con --project"
 elif [ ! -d "$PROJECT/standards" ]; then
   note "el proyecto no tiene standards/ (nada que revisar)"
@@ -520,12 +526,33 @@ else
         fail "$where: sin frontmatter válido (--- ... ---)"
         continue
       fi
-      for k in id task_id prueba_regresion candidato_standard; do
-        [ -n "$(fm_value "$f" "$k")" ] || fail "$where: falta '$k' en el frontmatter"
-      done
       id=$(fm_value "$f" id)
-      if [ -n "$id" ] && ! printf '%s' "$id" | grep -qx 'F-[0-9]\{8\}-[0-9]\{6\}'; then
-        fail "$where: id '$id' no sigue el formato F-AAAAMMDD-HHMMSS"
+      if printf '%s' "$id" | grep -qx 'F-[0-9]\{8\}-[0-9]\{6\}'; then
+        # Legado (anterior a FND-NNN): se lee con sus campos de entonces y no
+        # se le exigen status/test_result/motivo.
+        note "legado $where ($id): formato F-AAAAMMDD-HHMMSS, no se exigen campos nuevos"
+        for k in task_id prueba_regresion candidato_standard; do
+          [ -n "$(fm_value "$f" "$k")" ] || fail "$where: falta '$k' en el frontmatter"
+        done
+      elif printf '%s' "$id" | grep -qx 'FND-[0-9]\{3,\}'; then
+        for k in task_id descripcion severidad status prueba_regresion candidato_standard; do
+          [ -n "$(fm_value "$f" "$k")" ] || fail "$where: falta '$k' en el frontmatter"
+        done
+        [ "$(basename "$f" .md)" = "$id" ] \
+          || warn "$where: el archivo debería llamarse $id.md"
+        sev=$(fm_value "$f" severidad)
+        case "$sev" in critical|high|medium|low|'') ;; *) fail "$where: severidad '$sev' inválida (critical | high | medium | low)" ;; esac
+        st=$(fm_value "$f" status)
+        tres=$(fm_value "$f" test_result); [ "$tres" = "null" ] && tres=""
+        mot=$(fm_value "$f" motivo); [ "$mot" = "null" ] && mot=""
+        case "$st" in
+          open|'') ;;
+          resolved) [ -n "$tres" ] || fail "$where: status resolved sin test_result" ;;
+          wontfix) [ -n "$mot" ] || fail "$where: status wontfix sin motivo" ;;
+          *) fail "$where: status '$st' inválido (open | resolved | wontfix)" ;;
+        esac
+      else
+        fail "$where: id '$id' no sigue el formato FND-NNN (ni el legado F-AAAAMMDD-HHMMSS)"
       fi
       cand=$(fm_value "$f" candidato_standard)
       case "$cand" in si|no|'') ;; *) fail "$where: candidato_standard '$cand' inválido (si | no)" ;; esac
