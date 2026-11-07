@@ -228,6 +228,11 @@ Tomadas el 2026-11-07 sobre los hallazgos de
   recibirlo; malformado o manipulado → 400. Solo contiene valores de
   orden, nunca datos sensibles. Si cambian los filtros, el cursor
   anterior no vale (definir y documentar el comportamiento).
+  *Decidido (2026-11-07)*: el cursor no se firma. "Manipulado" =
+  malformado, de otra versión o emitido con otros filtros u orden → 400
+  `INVALID_CURSOR`; los valores decodificados se validan por tipo y van
+  siempre como parámetros, nunca concatenados. La autorización se aplica
+  siempre en el servidor.
 - Compatibilidad: no cambiar la forma de respuesta de un endpoint
   existente; aplicar en nuevos y, en existentes, solo versionado o con
   parámetro explícito, coordinado con frontend y mobile.
