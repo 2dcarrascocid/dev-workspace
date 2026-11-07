@@ -4,7 +4,7 @@ Se lee primero al iniciar sesión. Una línea por fase. Plan: `docs/plan/PLAN-AD
 
 | Fase | Estado | Fecha | Commit | Nota |
 |---|---|---|---|---|
-| 0 — Diagnóstico | hecha | 2026-11-07 | ver `git log -- docs/plan/FASE-0-diagnostico.md` | Rama creada desde `main`. Diagnóstico en `FASE-0-diagnostico.md`. Pendientes de decisión: H1-H5. |
+| 0 — Diagnóstico | hecha | 2026-11-07 | `864d439` | Rama creada desde `main`. Diagnóstico en `FASE-0-diagnostico.md`. Pendientes de decisión: H1-H5. |
 | 1 — Versionado | pendiente | — | — | — |
 | 2 — Calidad: findings, evidencia y escenarios | pendiente | — | — | Depende de H1, H3 y H4. |
 | 3 — Standards genéricos nuevos | pendiente | — | — | — |
