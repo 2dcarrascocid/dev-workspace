@@ -4,9 +4,12 @@ Antes de ejecutar cualquier instrucción de desarrollo que implique un criterio 
 implementación (manejo de errores, naming, estructura de servicios, validaciones,
 formato de logs, patrones de testing, etc.):
 
-1. **Buscar primero criterio aprobado**: un standard en `standards/` que cubra este
-   tipo de tarea (por nombre de archivo o contenido — usar graphify si está
-   disponible para no leer todo el árbol) y las fichas de módulo
+1. **Buscar primero criterio aprobado**: un standard que cubra este tipo de
+   tarea, en `standards/` del proyecto (locales) y en
+   `tools/dev-toolkit/standards/` (genéricos), por nombre de archivo o
+   contenido — usar graphify si está disponible para no leer todo el árbol.
+   Si un local y un genérico cubren lo mismo, prevalece el local y se señala
+   la diferencia. Buscar también las fichas de módulo
    (`.adf/modules/*.md`) con `estado: aprobada` cuyas `rutas` cubren lo que se va
    a tocar. Las fichas en `estado: borrador` no son criterio aprobado: son
    propuestas.

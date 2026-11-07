@@ -8,9 +8,12 @@ Antes de ejecutar cualquier instrucción de desarrollo que implique un criterio 
 implementación (manejo de errores, naming, estructura de servicios, validaciones,
 formato de logs, patrones de testing, etc.):
 
-1. **Buscar primero criterio aprobado**: un standard en `standards/` que cubra este
-   tipo de tarea (por nombre de archivo o contenido — usar graphify si está
-   disponible para no leer todo el árbol) y las fichas de módulo
+1. **Buscar primero criterio aprobado**: un standard que cubra este tipo de
+   tarea, en `standards/` del proyecto (locales) y en
+   `tools/dev-toolkit/standards/` (genéricos), por nombre de archivo o
+   contenido — usar graphify si está disponible para no leer todo el árbol.
+   Si un local y un genérico cubren lo mismo, prevalece el local y se señala
+   la diferencia. Buscar también las fichas de módulo
    (`.adf/modules/*.md`) con `estado: aprobada` cuyas `rutas` cubren lo que se va
    a tocar. Las fichas en `estado: borrador` no son criterio aprobado: son
    propuestas.
@@ -91,6 +94,8 @@ Cada hallazgo es `bloquea` o `recomienda`, según `adopcion:` en `PROJECT.md`
 | Cambio sin prueba que toca auth, autorización, datos personales o permisos | bloquea | bloquea |
 | Cualquier otro cambio sin prueba | recomienda, como `sin_cobertura` | bloquea |
 | Escenario de un standard aplicado sin test ni motivo | recomienda | bloquea |
+| Código nuevo que no cumple un standard aplicado (ej. SCP, PAG) | bloquea | bloquea |
+| Código existente que no cumple un standard (reportado, no tocado) | recomienda | recomienda |
 | `MISSING-PROJECT-STANDARD` (hay standards locales y no se aplicó ninguno) | recomienda | bloquea |
 | Madurez (E2E, ADR, convenciones de commits y similares) | recomienda | bloquea |
 
@@ -112,6 +117,8 @@ Por cada standard aplicado en la tarea:
   paginado tiene sus propios tests PAG-01…PAG-07, con el ID y el endpoint en
   el nombre (ej. `PAG-03 GET /items: no repite ni omite`). Un ID cubierto en
   un endpoint no cubre a otro.
+- `separacion-consulta-presentacion.md`: SCP-01..04 por cada unidad de
+  consulta y componente nuevo (ej. `SCP-04 ItemList: renderiza sin backend`).
 
 ## Standards del proyecto
 - Si el proyecto tiene standards locales (`standards/*.md` sin

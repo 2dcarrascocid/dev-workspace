@@ -10,9 +10,12 @@ Antes de ejecutar cualquier instrucción de desarrollo que implique un criterio 
 implementación (manejo de errores, naming, estructura de servicios, validaciones,
 formato de logs, patrones de testing, etc.):
 
-1. **Buscar primero criterio aprobado**: un standard en `standards/` que cubra este
-   tipo de tarea (por nombre de archivo o contenido — usar graphify si está
-   disponible para no leer todo el árbol) y las fichas de módulo
+1. **Buscar primero criterio aprobado**: un standard que cubra este tipo de
+   tarea, en `standards/` del proyecto (locales) y en
+   `tools/dev-toolkit/standards/` (genéricos), por nombre de archivo o
+   contenido — usar graphify si está disponible para no leer todo el árbol.
+   Si un local y un genérico cubren lo mismo, prevalece el local y se señala
+   la diferencia. Buscar también las fichas de módulo
    (`.adf/modules/*.md`) con `estado: aprobada` cuyas `rutas` cubren lo que se va
    a tocar. Las fichas en `estado: borrador` no son criterio aprobado: son
    propuestas.
@@ -47,6 +50,15 @@ formato de logs, patrones de testing, etc.):
 - Si un agente detecta duplicación de este tipo sin componente propio, debe
   señalarlo como hallazgo antes de seguir agregando código sobre el
   duplicado.
+
+## Consulta separada de presentación (obligatorio)
+- Todo código nuevo que lee datos del backend aplica
+  `tools/dev-toolkit/standards/separacion-consulta-presentacion.md` (SCP):
+  una unidad de consulta por consulta, componentes de presentación que no
+  llaman al backend y contenedores que los acoplan. El padre de la regla de
+  componentización es el contenedor.
+- Código existente que no lo cumple: hallazgo en `notes`, sin refactor
+  masivo. Si el proyecto tiene un standard local equivalente, prevalece.
 
 ---
 
