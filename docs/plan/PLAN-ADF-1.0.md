@@ -13,7 +13,7 @@ inicio de cada sesión y se ejecuta **una fase a la vez**.
   `mobile-dev`, `security-reviewer`, `qa-tester`) coordinados por
   `agent_orchestrator`, que nunca cierra una tarea sin un Validator.
 - Prompts por rol en `agents/shared/`, frontmatter por proveedor en
-  `agents/frontmatter/{claude,gemini,codex}/`, generados en `agents/dist/`
+  `agents/frontmatter/{claude,gemini,codex,copilot,opencode}/`, generados en `agents/dist/`
   con `agents/build.sh`. Skills en `skills/`. Setup en `setup/`.
 - Hoy cada proyecto lo consume como clon directo en `tools/dev-toolkit`,
   siguiendo siempre `main`.
@@ -46,8 +46,8 @@ Publicar el ADF 1.0.0 como framework:
 - Los roles en `agents/shared/` son genéricos. Lo específico de una
   tecnología va en `profiles/`.
 - Nada aprueba solo: ningún modo autónomo, ninguna autoaprobación.
-- Nunca editar `agents/dist/` a mano: siempre `agents/build.sh`, y los
-  3 proveedores quedan consistentes.
+- Nunca editar `agents/dist/` a mano: siempre `agents/build.sh`, y todos
+  los proveedores presentes quedan consistentes.
 
 ## D. Forma de trabajo (todas las fases)
 
@@ -69,6 +69,45 @@ Publicar el ADF 1.0.0 como framework:
 6. Registra cada fase con `evidence_logger`.
 7. Al cerrar la fase: diff resumido por archivo, resultado de la
    validación, decisiones pendientes y qué sigue. Luego **detente**.
+
+## E. Decisiones Fase 0
+
+Tomadas el 2026-11-07 sobre los hallazgos de
+`docs/plan/FASE-0-diagnostico.md`. Rigen sobre el texto de las fases.
+
+- **H1 — `standards/_TEMPLATE.md`**: se restaura desde `6c6a864^` al inicio
+  de la Fase 2.3 y se extiende ahí. El check 7 de `check-adf.sh` pasa a
+  fallar si falta la plantilla o si un standard no tiene sus secciones
+  obligatorias, con una prueba del caso que hoy pasa mal (standard sin
+  secciones → OK).
+  - *Señalado, pendiente de confirmación*: la versión de `6c6a864^` trae
+    ejemplos tomados de un proyecto real (l. 5-6, nombres de standards;
+    l. 16, `routes/api/`). Por la regla de la sección A se propone
+    restaurarla con esos ejemplos neutralizados.
+- **H2 — Proveedores**: el framework incluye los 5 presentes (`claude`,
+  `gemini`, `codex`, `copilot`, `opencode`). Donde el plan diga "los 3
+  proveedores" se lee "todos los proveedores presentes". Copilot y
+  OpenCode se marcan "sin probar" en la documentación hasta que se usen.
+  En la Fase 7 los hooks se implementan solo donde el CLI los soporte.
+- **H3 — Formato de findings**: conviven ambos. Desde la fecha de corte de
+  la Fase 2, los findings nuevos usan `FND-NNN` con `status`. Los
+  `F-AAAAMMDD-HHMMSS` se siguen leyendo; `adf check` los informa como
+  "legado" y no los bloquea. No se reescribe evidencia histórica.
+- **H4 — `not_run`**: reemplaza la regla 2.2 (ver Fase 2.2). `qa-tester.md`
+  (hoy l. 46-48) se alinea con ella.
+- **H5 — Referencias desactualizadas**: `adf_health_check` (5 CLIs, sin
+  submodule) se actualiza en la Fase 4; el comentario de `.gitignore` en
+  la Fase 2.5.
+- **Historial**: el repo es público y su historial contiene datos de un
+  proyecto real. Se decide antes de la Fase 9 (paso agregado allí). Hasta
+  entonces no se reescribe nada.
+- **Check 13 (MSYS)**: el FAIL de la Fase 0 se obtuvo en Windows (Git Bash,
+  `MINGW64_NT-10.0-19045`) con `MSYS=disable_pcon`. Es el comportamiento
+  esperado del check, no un hallazgo.
+- **Fase 7**: antes de implementar, releer textual el evento exacto de cada
+  CLI en su documentación oficial.
+- **Riesgo de proveedor**: Gemini CLI → Antigravity CLI se anota en
+  `skills/CATALOG.md` (Fase 2.6), sin acción por ahora.
 
 ---
 
@@ -118,12 +157,22 @@ Publicar el ADF 1.0.0 como framework:
   `wontfix`).
 - `qa-tester`: todo bug corregido lleva un test de regresión que nombra
   su `FND-NNN`.
+- Convivencia (E · H3): la fecha de corte es el commit de esta fase. Los
+  findings anteriores (`F-AAAAMMDD-HHMMSS`, `.adf/findings/*.md`) se
+  siguen leyendo y no se migran ni reescriben.
 
-**2.2 "Sin medir" nunca es "aprobado"**
+**2.2 "Sin medir" nunca es "aprobado"** (E · H4)
 - En los 6 roles: una verificación que no se pudo correr es `not_run`
-  con motivo; no bloquea por sí sola, pero jamás cuenta como `passed`.
+  con motivo. `not_run` nunca cuenta como `passed` ni aprueba
+  automáticamente: la tarea queda en `needs_review` con el motivo, y
+  decide la persona.
+- Alinear `qa-tester.md` (hoy l. 46-48) con esta regla.
 
 **2.3 Standards con escenarios**
+- Primero (E · H1): restaurar `standards/_TEMPLATE.md` desde `6c6a864^`.
+  Corregir el check 7 de `check-adf.sh` para que falle si falta la
+  plantilla o si un standard no tiene sus secciones obligatorias, con una
+  prueba del caso que hoy pasa mal.
 - `standards/_TEMPLATE.md`: sección "Escenarios" con IDs
   (`<PREFIJO>-01`…), cada uno verificable; un escenario puede declararse
   `fuera` con motivo.
@@ -148,6 +197,8 @@ Publicar el ADF 1.0.0 como framework:
   scripts de un uso, pruebas manuales, descargas y logs van en `./tmp`.
 - `project_bootstrap` crea `./tmp` salvo que el proyecto ya versione
   archivos en `tmp/` (en ese caso avisa y no lo toca).
+- (E · H5) Actualizar el comentario de `.gitignore` del toolkit sobre
+  `agents/dist/`: hoy menciona `git submodule update --remote`.
 
 **2.6 `skills/CATALOG.md`**
 - QDD-framework: "Descartado (reconfirmado 2026-11-05, v2.9.10)".
@@ -157,6 +208,9 @@ Publicar el ADF 1.0.0 como framework:
   Windows/Git Bash. Ideas tomadas: Modo Consultivo, `_TEMPLATE.md`,
   findings + regresión, sin medir ≠ aprobado, escenarios, certificación
   en capas, `./tmp`, gate determinista.
+- (E) Riesgo de proveedor: Gemini CLI fue reemplazado por Antigravity CLI
+  para usuarios sin pago y de Google One desde el 2026-06-18 (banner de
+  geminicli.com/docs/hooks). Sin acción por ahora.
 
 ## Fase 3 — Standards genéricos nuevos
 
@@ -232,6 +286,8 @@ Publicar el ADF 1.0.0 como framework:
    para cualquier app móvil; lo de Flutter va a `profiles/flutter.md`.
    Los roles aplican los perfiles declarados en `adf.yaml`; sin perfil,
    trabajan con el criterio genérico y lo informan.
+   (E · H5) `adf_health_check` además revisa los 5 CLIs y deja de
+   mencionar el submodule.
 5. `link.sh` lee `adf.yaml`: enlaza solo roles activos, para los
    proveedores declarados, con sus perfiles. Sin `adf.yaml`, se comporta
    como hoy y sugiere `adf init`.
@@ -252,8 +308,9 @@ solo lo necesario). Ayuda en español (`adf help`, `adf <cmd> --help`).
   validación de `adf.yaml` + `MSYS` en Windows + versión del proyecto vs.
   la última. `--fix` repara solo lo seguro y dice qué cambió.
 - **`adf check`** — verificación sin IA; sale con código ≠ 0 si falla:
-  - todo finding tiene `status`; los `resolved` tienen `test_result`;
-    los `wontfix`, `motivo`;
+  - todo finding `FND-NNN` tiene `status`; los `resolved` tienen
+    `test_result`; los `wontfix`, `motivo`. Los `F-AAAAMMDD-HHMMSS` se
+    informan como "legado" y no bloquean (E · H3);
   - cada certificación tiene sus campos obligatorios;
   - la evidencia coincide con git: el `commit` existe y `files_touched`
     corresponde a su diff (si no, la evidencia se rechaza);
@@ -298,6 +355,10 @@ solo lo necesario). Ayuda en español (`adf help`, `adf <cmd> --help`).
 Según lo confirmado en Fase 0.6. Implementa solo lo que cada CLI soporte
 de verdad; lo que no, se documenta como limitación.
 
+- Antes de implementar (E): releer **textual** el evento exacto de cada
+  CLI en su documentación oficial y citarlo. En la Fase 0 las páginas de
+  Claude Code y Codex llegaron en parte resumidas.
+
 - Antes de una edición: bloquear escrituras en archivos de credenciales,
   `agents/dist/` y `tools/dev-toolkit/` desde un proyecto.
 - Después de una edición: lint y tests de lo tocado cuando el perfil del
@@ -305,7 +366,8 @@ de verdad; lo que no, se documenta como limitación.
 - Al terminar (tarea o subagente): `adf check`; si falla, el agente
   recibe el motivo y no puede declarar la tarea cerrada.
 - Hooks rápidos (objetivo < 5 s salvo tests) y sin red.
-- Plantillas por proveedor en `hooks/{claude,gemini,codex}/`, instaladas
+- Plantillas en `hooks/<proveedor>/` para cada proveedor presente cuyo CLI
+  soporte hooks (E · H2), instaladas
   por `adf link` según `adf.yaml`, sin pisar configuración existente del
   usuario.
 - Referencia de diseño: hooks `PostToolUse`/`Stop` del fork
@@ -349,7 +411,10 @@ con la sección del CHANGELOG. Nada más.
   conceptos (roles, skills, standards, perfiles, `adf.yaml`, capas de
   cumplimiento), referencia de comandos, versionado, troubleshooting
   (conserva MSYS, CRLF, carpetas random de 8 caracteres, terminales de
-  Windows).
+  Windows). Copilot y OpenCode figuran como "sin probar" hasta que se
+  usen (E · H2).
+- (E) Resolver la limpieza de historial antes del tag `v1.0.0`: el repo
+  es público y su historial contiene datos de un proyecto real.
 - `docs/cumplimiento.md`: tabla de capas (hooks del CLI, git hooks,
   `adf check`, Validator aislado, CI del proyecto, banco de pruebas): qué
   evita cada una y si depende del modelo.
