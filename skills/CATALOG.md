@@ -64,7 +64,8 @@ Fuente: github.com/trdago/qdd-framework.
   Windows/Git Bash.
 - **Ideas tomadas** (implementación propia):
   1. Modo Consultivo, bloque obligatorio en los roles (a5f772a).
-  2. `standards/_TEMPLATE.md` (a5f772a).
+  2. `standards/_TEMPLATE.md` (8220254; borrado en 6c6a864 y restaurado en
+     b695195 con ejemplos neutros).
   3. Certificación liviana en `.adf/certifications/` (diseñada en a5f772a,
      integrada en 9dbc64c).
   4. Estado por frente (`.adf/ESTADO.md`).
@@ -74,13 +75,15 @@ Fuente: github.com/trdago/qdd-framework.
   8. Findings con prueba de regresión (`.adf/findings/`).
   9. Gate veraz con adopción gradual (`adopcion: gradual|estricta`).
   10. Findings con `status` y `test_result` obligatorios; el test de
-      regresión nombra el id (38df123).
-  11. Sin medir ≠ aprobado: `not_run` en los 6 roles (a82f541).
-  12. Conformidad de standards por escenario (`<PREFIJO>-NN`) (2045d0f,
-      lint en 4335ace).
+      regresión nombra el id (96cad2d). Ids `FND-NNN` correlativos por repo;
+      los `F-AAAAMMDD-HHMMSS` quedan como legado.
+  11. Sin medir ≠ aprobado: `not_run` en los 6 roles (6a97307); con algo en
+      `not_run` la tarea queda `needs_review` y decide la persona.
+  12. Conformidad de standards por escenario (`<PREFIJO>-NN`) (b695195,
+      lint en ff77052).
   13. Certificación con escenarios, findings y standards genéricos/locales
-      (2e897ea).
-  14. `./tmp` en los roles y en `project_bootstrap` (12993ec).
+      (0e72c09).
+  14. `./tmp` en los roles y en `project_bootstrap` (c6de63e).
 - **Descartadas a propósito**: score 0-100, blueprints, dashboard,
   keep-alive, equipo resolutor, certificaciones ISO de IA.
 
@@ -104,3 +107,14 @@ Expo/React Native.
 | n8n-mcp — github.com/czlonkowski/n8n-mcp | Pendiente | Sólido y acotado; sin caso de uso hoy. |
 | Archify — github.com/tt-a1i/archify | Pendiente | Diagramas HTML interactivos, complementa graphify. Dudas: no confirma soporte de Gemini CLI; consulta updates cada ~72 h (desactivable con `ARCHIFY_UPDATE_CHECK_DISABLED=1`). Probar primero en un monorepo. |
 | Ollama + Continue | Instalado (solo Mac) | Modelos locales para tareas acotadas y código que no debe salir de la máquina; complementan, no reemplazan, a los CLIs de pago. La configuración vive fuera del toolkit. |
+
+## Riesgos de proveedor
+
+Sin acción por ahora; se revisan al planificar cada versión.
+
+- **Gemini CLI → Antigravity CLI** (anotado 2026-11-07): la documentación
+  oficial (geminicli.com/docs/hooks) avisa que desde el 2026-06-18 los
+  usuarios sin pago y de Google One pasaron a Antigravity CLI, y que Gemini
+  CLI no está optimizado para los modelos nuevos. El ADF sigue generando
+  `agents/dist/gemini/`; no se sabe si Antigravity lee `.gemini/` ni si
+  conserva el sistema de hooks.

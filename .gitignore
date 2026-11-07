@@ -20,6 +20,9 @@ __pycache__/
 .gemini/evidence/
 *.log
 
-# nota: agents/dist/ NO se ignora a propósito — se commitea generado,
-# así los proyectos consumidores no necesitan correr build.sh para
-# levantar la última versión al hacer `git submodule update --remote`.
+# scripts de un solo uso, pruebas manuales, descargas y logs
+tmp/
+
+# nota: agents/dist/ NO se ignora a propósito — se commitea generado, así
+# los proyectos que clonan el toolkit en tools/dev-toolkit lo usan tal cual
+# tras `setup/update.sh` (git pull), sin depender de correr build.sh.
